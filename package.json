@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Cacassiano/ppe-iff#readme",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1"
