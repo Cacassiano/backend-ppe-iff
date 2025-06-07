@@ -13,5 +13,5 @@ app.set('views', __dirname + '/views')
 
 // mapear requisicao tipo GET para o endpoint "/", ou sendo, vazio
 app.get("/", (req, resp) => {
-    resp.redirect("/register");
+    resp.render('main');
 });

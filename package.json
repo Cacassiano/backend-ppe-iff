@@ -2,7 +2,7 @@
   "name": "ppe_iff_back",
   "version": "1.0.0",
   "description": "Backend de uma aplicacao de cardapio para o iff quissamã",
-  "main": "src/ppe_iff_back/server/server.mjs",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Cacassiano/ppe-iff#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "mongodb": "^6.17.0",

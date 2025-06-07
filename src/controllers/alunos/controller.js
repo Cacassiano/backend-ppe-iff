@@ -5,6 +5,19 @@ router.get("/",(req,res) => {
     res.redirect("/aluno/register");
 });
 
+router.get("/login", (req,resp) => {
+    if(req.query.matricula != undefined && req.query.senha != undefined) {
+        if (Aluno.login(req.query.senha, req.query.matricula)) {
+            resp.redirect("/aluno/homepage")
+        } else {
+            resp.render("./aluno/templates/login");
+            alert("algo deu errado");
+        }
+    } else {
+        resp.render("./aluno/templates/login");
+    }
+});
+
 router.get("/register", (req,resp) => {
     if(req.query.matricula != undefined &&
         req.query.nome != undefined &&
