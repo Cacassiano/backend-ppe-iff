@@ -3,9 +3,10 @@ const bcriptService = require('./criptografiaService');
 
 const login = async (senha, mat) => {
     aluno = await model.findOne({matricula: mat})
-    console.log(aluno);
     if(aluno){
-        return bcriptService.comparar(senha, aluno.senha);
+        let a = bcriptService.comparar(senha, aluno.senha);
+        console.log(a);
+        return a;
     }
     return false;
 }

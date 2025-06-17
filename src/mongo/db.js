@@ -1,8 +1,7 @@
 const mongodb = require('mongoose');
 
 // Conectar com o banco de dados
-const adminPassword = "aS0bsmBaRhw99hL3";
-const db_url = "mongodb+srv://admin-db:"+adminPassword+"@ppe-iff-cluster.clsszda.mongodb.net/?retryWrites=true&w=majority&appName=ppe-iff-cluster";
+const db_url = process.env.DB_URL;
 const conexao = () => {
     console.log("comecou a conexao");
     mongodb.connect(db_url)
