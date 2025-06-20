@@ -11,7 +11,7 @@ router.post("/register", (req,resp) => {
         req.body.senha != undefined
     ) {
         try{
-            token = jwtService.criarToken(req.body.matricula,req.body.senha);
+            token = jwtService.criarToken(req.body.matricula,req.body.senha, ["ROLE_ALUNO"]);
             Aluno.save(req.body);
             resp.status(201).json({
                 matricula:req.body.matricula, 
@@ -43,9 +43,10 @@ router.post("/login", (req,resp) => {
     }
 });
 
-router.use("/detalhes", jwtService.validar);
-router.get("/detalhes/:matricula", async (req,resp) => {
-    aluno = await Aluno.getByMatricula(req.params.matricula);
+router.use("/detalhes", jwtService.validarAluno);
+router.get("/detalhes", async (req,resp) => {
+    tkContent = jwtService.getConteudo(req);
+    aluno = await Aluno.getByMatricula(tkContent.id);
     console.log(aluno);
     return resp.status(200).json(aluno);
 })
