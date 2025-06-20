@@ -2,7 +2,8 @@ require('dotenv').config({
     path:'.env'
 })
 
-const app = require('express')();
+const express = require('express');
+const app = express();
 const cors = require('cors');
 const { urlencoded } = require('express');
 const alunoController = require('./src/controllers/alunos/Alunocontroller')
@@ -16,6 +17,7 @@ db();
 app.listen(port);
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(express.json());
 app.use("/aluno", alunoController);
 app.use("/funcionarios/cantina", cantinaController);
 

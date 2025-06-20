@@ -13,10 +13,23 @@ const login = async (senha, mat) => {
 
 const save = (body) => {
     body['senha'] = bcriptService.criptografar(body.senha);
-    model.create(body)
+    model.create(body);
 };
+
+const getByMatricula = async (mat) => {
+    aluno =await model.findOne({matricula: mat}); 
+    console.log(aluno)
+    return {
+        nome: aluno.nome,
+        sobrenome: aluno.sobrenome,
+        matricula: aluno.matricula,
+        email: aluno.email,
+        podeAlmocar: aluno.podeAlmocar
+    };
+}
 
 module.exports = {
     save,
     login,
+    getByMatricula,
 }
