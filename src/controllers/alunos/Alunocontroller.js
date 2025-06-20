@@ -2,12 +2,6 @@ const router = require('express').Router();
 const Aluno =  require('../../services/alunoService');
 const jwtService = require("../../infra/auth/jwt_service");
 
-
-router.get("/",(req,res) => res.redirect("/aluno/register"));
-router.get("/login", (req,resp) => resp.render("./aluno/templates/login"));
-router.get("/homepage", (req,resp) => resp.render("./aluno/templates/homepage"));
-router.get("/register", (req, resp) => resp.render("./aluno/templates/register"));
-
 router.post("/register", (req,resp) => {
     console.log(req.body);
     if(req.body.matricula != undefined &&

@@ -1,24 +1,15 @@
 const Funcionario = require('../../services/funcionarioServices');
 const router = require('express').Router();
 
-router.get('/', (req, resp) => {
-    resp.redirect("/login");
-});
-
-router.get("/",(req,res) => {
-    res.redirect("/funcionarios/cantina/login");
-});
-
 router.get("/login", (req,resp) => {
     if(req.query.email != undefined && req.query.senha != undefined) {
         if (Funcionario.login(req.query.senha, req.query.email)) {
             resp.redirect("/funcionarios/cantina/homepage")
         } else {
-            resp.render("./cantina/templates/login");
-            alert("algo deu errado");
+            resp.json({messafe: "erro login"});
         }
     } else {
-        resp.render("./cantina/templates/login");
+        resp.json({messafe: "erro login"});
     }
 });
 
