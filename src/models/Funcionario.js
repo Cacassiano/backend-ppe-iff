@@ -25,4 +25,4 @@ const schema = mongoose.Schema({
 
 const model = mongoose.model("Funcionario", schema);
 
-return model;
+module.exports = model;
