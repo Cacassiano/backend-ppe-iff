@@ -6,7 +6,7 @@ const save = (body) => {
     model.create(body);
 };
 const login = async (senha, identificador) => {
-    func = await model.findOne({email: email});
+    func = await model.findOne({email: identificador});
     if(func) {
         return bcript.comparar(senha, func.senha);
     }

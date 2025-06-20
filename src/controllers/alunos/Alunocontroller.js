@@ -30,7 +30,7 @@ router.post("/register", (req,resp) => {
 router.post("/login", (req,resp) => {
     if(req.body.matricula != undefined && req.body.senha != undefined) {
         if (Aluno.login(req.body.senha, req.body.matricula)) {
-            token = jwtService.criarToken(req.body.matricula,req.body.senha);
+            token = jwtService.criarToken(req.body.matricula,req.body.senha,["ROLE_ALUNO"]);
             resp.status(200).json({
                 matricula:req.body.matricula,
                 token: token
@@ -43,12 +43,12 @@ router.post("/login", (req,resp) => {
     }
 });
 
-router.use("/detalhes", jwtService.validarAluno);
+router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));
+
 router.get("/detalhes", async (req,resp) => {
-    tkContent = jwtService.getConteudo(req);
-    aluno = await Aluno.getByMatricula(tkContent.id);
+    aluno = await Aluno.getByMatricula(req.user.id);
     console.log(aluno);
-    return resp.status(200).json(aluno);
+    resp.status(200).json(aluno);
 })
 
 module.exports = router;
