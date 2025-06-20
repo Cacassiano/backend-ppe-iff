@@ -36,7 +36,7 @@ router.post("/register", (req,resp) => {
     }
 });
 
-router.use("*", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"));
+router.use("/detalhes", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"));
 router.get("/detalhes", async (req,resp) => {
     func = await Funcionario.getByEmail(req.user.id);
     console.log(func);

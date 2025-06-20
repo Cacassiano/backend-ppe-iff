@@ -24,10 +24,10 @@ app.use(express.json());
 app.use("/aluno", alunoController);
 app.use("/funcionarios/cantina", cantinaController);
 
+app.use("/cardapio", tkservice.validar("ROLE_ALUNO"))
+app.use("/cardapio", cardapioController);
 
+// mapear requisicao tipo GET para o endpoint "/", ou sendo, vazio
 app.get("/", (req, resp) => {
     resp.send("test hello world!");
 });
-
-app.use("*", tkservice.validar(["ROLE_ALUNO"]));
-app.use("/cardapio", cardapioController);
