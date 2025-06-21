@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Aluno =  require('../../services/alunoService');
 const jwtService = require("../../infra/auth/jwt_service");
 
-router.post("/register", (req,resp) => {
+router.post("/register", async (req,resp) => {
     console.log(req.body);
     if(req.body.matricula != undefined &&
         req.body.nome != undefined &&
@@ -10,16 +10,17 @@ router.post("/register", (req,resp) => {
         req.body.podeAlmocar != undefined &&
         req.body.senha != undefined
     ) {
-        try{
-            token = jwtService.criarToken(req.body.matricula,req.body.senha, ["ROLE_ALUNO"]);
-            Aluno.save(req.body);
+        senha = req.body.senha;
+        aluno = await Aluno.save(req.body);
+        if(aluno == null) {
+            console.log("erro te peguei");
+            return resp.status(500).json({mssage: "erro ao criar novo usuario"});
+        } else {
+            token = jwtService.criarToken(req.body.matricula, aluno.id, senha);
             resp.status(201).json({
                 matricula:req.body.matricula, 
                 token: token
             });
-        } catch (e) {
-            console.log(e);
-            resp.status(400).json({message: 'erro ao tentar salvar novo aluno'});
         }
     } else {
         resp.status(403).json({message:"erro"});
@@ -27,18 +28,18 @@ router.post("/register", (req,resp) => {
 });
 
 
-router.post("/login", (req,resp) => {
+router.post("/login", async (req,resp) => {
     if(req.body.matricula != undefined && req.body.senha != undefined) {
-        if (Aluno.login(req.body.senha, req.body.matricula)) {
-            token = jwtService.criarToken(req.body.matricula,req.body.senha,["ROLE_ALUNO"]);
+        aluno = await Aluno.login(req.body.senha, req.body.matricula);
+        if (aluno !== null) {
+            token = jwtService.criarToken(req.body.matricula ,aluno.id, req.body.senha);
             resp.status(200).json({
                 matricula:req.body.matricula,
                 token: token
             });
         } else {
             console.log("error")
-            resp.status(400).json({message:"erro"});
-            alert("algo deu errado");
+            resp.status(400).json({message:"user não existe"});
         }
     }
 });
@@ -46,7 +47,7 @@ router.post("/login", (req,resp) => {
 router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));
 
 router.get("/detalhes", async (req,resp) => {
-    aluno = await Aluno.getByMatricula(req.user.id);
+    aluno = await Aluno.getById(req.user.id);
     console.log(aluno);
     resp.status(200).json(aluno);
 })

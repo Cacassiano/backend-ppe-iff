@@ -1,29 +1,34 @@
 const model =  require("../models/Funcionario");
 const bcript = require('./criptografiaService');
 
-const save = (body) => {
+const save = async (body, roles) => {
     body.senha = bcript.criptografar(body.senha);
-    model.create(body);
+    body.roles = ["ROLE_USER", "ROLE_FUNC"].concat(roles)
+    try{
+        func = await model.create(body);
+    } catch(e){
+        console.log(e);
+        return null;
+    }
+    console.log(func);
+    return func;
 };
+
 const login = async (senha, identificador) => {
     func = await model.findOne({email: identificador});
     if(func) {
-        return bcript.comparar(senha, func.senha);
+        return func;
     }
     return false;
 };
 
-const getByEmail = async (email) => {
-    func = await model.findOne({email: email});
-    return {
-        nome: func.nome,
-        sobrenome: func.sobrenome,
-        email: func.email,
-    }
+const getById = async (id) => {
+    func = await model.findById(id);
+    return func
 }
 
 module.exports = {
     login,
     save,
-    getByEmail,
+    getById,
 }
