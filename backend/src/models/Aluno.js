@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
         type:Boolean,
         required: true
     },
-    role: [
+    roles: [
         {
             type:String,
             default:"ROLE_ALUNO"

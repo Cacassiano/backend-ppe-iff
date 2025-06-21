@@ -11,7 +11,7 @@ const login = async (senha, mat) => {
 
 const save = async (body) => {
     body['senha'] = bcriptService.criptografar(body.senha);
-    body.role = ["ROLE_USER", "ROLE_ALUNO"]
+    body.roles = ["ROLE_USER", "ROLE_ALUNO"]
     try{
         aluno = await model.create(body);
     } catch(e){
