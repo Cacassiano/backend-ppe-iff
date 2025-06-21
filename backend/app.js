@@ -17,7 +17,6 @@ const port = 8080;
 
 db();
 // Conectar a api a determinada porta
-app.listen(port);
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -31,3 +30,6 @@ app.use("/cardapio", cardapioController);
 app.get("/", (req, resp) => {
     resp.send("test hello world!");
 });
+app.listen(port, () => {
+	console.log(`Servidor rodando na porta ${port}`);
+}); // listen depois dos middlewares para nao ter risco das req chegarem antes
