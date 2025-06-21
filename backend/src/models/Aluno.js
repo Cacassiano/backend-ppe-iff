@@ -26,8 +26,14 @@ const schema = new mongoose.Schema({
     podeAlmocar: {
         type:Boolean,
         required: true
-    }
-});
+    },
+    role: [
+        {
+            type:String,
+            default:"ROLE_ALUNO"
+        }
+    ]
+}, {timestamps:true, id:true});
 const entity = mongoose.model("Aluno", schema);
 
 module.exports = entity;

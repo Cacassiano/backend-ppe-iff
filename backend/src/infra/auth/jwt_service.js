@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const chave = (process.env.SECRET_KEY ? process.env.SECRET_KEY: "senha")
 const umDiaEmSecs = 60*60*24;
+const alunoService = require('../../services/alunoService')
+const funcionariosService = require('../../services/funcionarioServices')
+const bcriptService = require('../../services/criptografiaService')
 
 
 const validar = (...roles) => {
@@ -10,13 +13,22 @@ const validar = (...roles) => {
         if (!token) return resp.status(401).send("Entrada restrita");
         try {
             const conteudo = await jwt.verify(token, chave);
-            console.log(conteudo);
-            if(conteudo.id == undefined || conteudo.senha == undefined ) return resp.status(403).json({message: "token invalido"});
+            console.log(conteudo)
+            if(conteudo.id === undefined || conteudo.senha === undefined || conteudo.subject === undefined ) return resp.status(403).json({message: "token invalido"});
+
+            let sujeito = await alunoService.getById(conteudo.id);
+            
+            if(!sujeito) sujeito = await funcionariosService.getById(conteudo.id);
+            if(!sujeito || !bcriptService.comparar(conteudo.senha, sujeito.senha)) return resp.status(403).json({message: "user nao existe"});
+
+            console.log(sujeito)
+            console.log(roles)
             roles.forEach(role => {
-                if(!conteudo.role.includes(role)){
+                if(!sujeito.roles.includes(role)){
                     return resp.status(403).json({message: "acesso não autorizado"});
                 }
             })
+            
             req.user = conteudo;
             return next();
         } catch(err) {
@@ -26,11 +38,14 @@ const validar = (...roles) => {
     }
 };
 
-const criarToken = (sujeito, senha, role) => {
+const criarToken = (sujeito, id, senha) => {
+    console.log(sujeito)
+    console.log(id);
+    console.log(senha)
     token = jwt.sign({
-        id: sujeito,
+        subject: sujeito,
+        id: id,
         senha: senha,
-        role: role,
         exp: Date.now()+2*umDiaEmSecs,
     }, chave);
 

@@ -2,34 +2,34 @@ const model = require('../models/Aluno');
 const bcriptService = require('./criptografiaService');
 
 const login = async (senha, mat) => {
-    aluno = await model.findOne({matricula: mat})
-    if(aluno){
-        let a = bcriptService.comparar(senha, aluno.senha);
-        console.log(a);
-        return a;
-    }
-    return false;
+    aluno = await model.findOne({matricula: mat});
+    if(!aluno) return null;
+    if(!bcriptService.comparar(senha, aluno.senha)) return null;
+    console.log(aluno)
+    return aluno;
 }
 
-const save = (body) => {
+const save = async (body) => {
     body['senha'] = bcriptService.criptografar(body.senha);
-    model.create(body);
+    body.role = ["ROLE_USER", "ROLE_ALUNO"]
+    try{
+        aluno = await model.create(body);
+    } catch(e){
+        console.log(e);
+        return null;
+    }
+    console.log(aluno);
+    return aluno;
 };
 
-const getByMatricula = async (mat) => {
-    aluno =await model.findOne({matricula: mat}); 
+const getById = async (id) => {
+    aluno =await model.findById(id); 
     console.log(aluno)
-    return {
-        nome: aluno.nome,
-        sobrenome: aluno.sobrenome,
-        matricula: aluno.matricula,
-        email: aluno.email,
-        podeAlmocar: aluno.podeAlmocar
-    };
+    return aluno;
 }
 
 module.exports = {
     save,
     login,
-    getByMatricula,
+    getById,
 }
