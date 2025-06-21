@@ -5,7 +5,7 @@ const tkservice = require('../../infra/auth/jwt_service');
 router.post("/login", (req,resp) => {
     if(req.body.email != undefined && req.body.senha != undefined) {
         if (Funcionario.login(req.body.senha, req.body.email)) {
-            token = tkservice.criarToken(req.body.email, req.body.senha, ["ROLE_FUNC", "ROLE_CANTINA"]);
+            token = tkservice.criarToken(req.body.email, req.body.senha, ["ROLE_ALUNO","ROLE_FUNC", "ROLE_CANTINA"]);
             resp.status(200).json({
                 token: token,
                 email: req.body.email
@@ -25,7 +25,7 @@ router.post("/register", (req,resp) => {
         req.body.sobrenome != undefined &&
         req.body.senha != undefined
     ) {
-        token = tkservice.criarToken(req.body.email, req.body.senha, ["ROLE_FUNC", "ROLE_CANTINA"]);
+        token = tkservice.criarToken(req.body.email, req.body.senha, ["ROLE_ALUNO", "ROLE_FUNC", "ROLE_CANTINA"]);
         Funcionario.save(req.body);
         resp.status(201).json({
             token: token,
