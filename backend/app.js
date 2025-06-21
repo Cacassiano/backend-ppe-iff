@@ -1,35 +1,38 @@
 require('dotenv').config({
     path:'.env'
-})
+});
 
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const { urlencoded } = require('express');
-const alunoController = require('./src/controllers/alunos/Alunocontroller')
-const cantinaController = require('./src/controllers/funcionarios/cantinaController')
-const cardapioController = require("./src/controllers/cardapio/cardapioController")
+const alunoController = require('./src/controllers/alunos/Alunocontroller');
+const cantinaController = require('./src/controllers/funcionarios/cantinaController');
+const cardapioController = require("./src/controllers/cardapio/cardapioController");
 const tkservice = require('./src/infra/auth/jwt_service');
-
 const bodyParser = require('body-parser');
 const db = require("./src/mongo/db");
 const port = 8080;
 
-db();
-// Conectar a api a determinada porta
-app.use(cors());
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(express.json());
-app.use("/aluno", alunoController);
-app.use("/funcionarios/cantina", cantinaController);
+(async () => {
+    await db(); // conecta ao Mongo antes de tudo
 
-app.use("/cardapio", tkservice.validar("ROLE_ALUNO"))
-app.use("/cardapio", cardapioController);
+    // Middlewares e rotas
+    app.use(cors());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(express.json());
 
-// mapear requisicao tipo GET para o endpoint "/", ou sendo, vazio
-app.get("/", (req, resp) => {
-    resp.send("test hello world!");
-});
-app.listen(port, () => {
-	console.log(`Servidor rodando na porta ${port}`);
-}); // listen depois dos middlewares para nao ter risco das req chegarem antes
+    app.use("/aluno", alunoController);
+    app.use("/funcionarios/cantina", cantinaController);
+    app.use("/cardapio", tkservice.validar("ROLE_ALUNO"));
+    app.use("/cardapio", cardapioController);
+
+    app.get("/", (req, resp) => {
+        resp.send("test hello world!");
+    });
+
+    app.listen(port, () => {
+        console.log(`Servidor rodando na porta ${port}`);
+    });
+})();
+
