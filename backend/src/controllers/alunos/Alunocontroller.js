@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Aluno =  require('../../services/alunoService');
+const Aluno =  require('../../services/usuarios/alunoService');
 const jwtService = require("../../infra/auth/jwt_service");
 
 router.post("/register", async (req,resp) => {

@@ -1,4 +1,4 @@
-const Funcionario = require('../../services/funcionarioServices');
+const Funcionario = require('../../services/usuarios/funcionarioServices');
 const router = require('express').Router();
 const tkservice = require('../../infra/auth/jwt_service');
 

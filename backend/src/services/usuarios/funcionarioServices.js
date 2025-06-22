@@ -1,17 +1,11 @@
-const model =  require("../models/Funcionario");
-const bcript = require('./criptografiaService');
+const model =  require("../../models/Funcionario");
+const bcript = require('../seguranca/criptografiaService');
+const dbService = require("../../mongo/dbService")
 
 const save = async (body, roles) => {
     body.senha = bcript.criptografar(body.senha);
     body.roles = ["ROLE_USER", "ROLE_FUNC"].concat(roles)
-    try{
-        func = await model.create(body);
-    } catch(e){
-        console.log(e);
-        return null;
-    }
-    console.log(func);
-    return func;
+    return await dbService.create_new(body, model);
 };
 
 const login = async (senha, identificador) => {
