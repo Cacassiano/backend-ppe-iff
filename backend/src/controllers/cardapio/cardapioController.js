@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const service = require('../../services/cardapioService')
+const service = require('../../services/cardapio/cardapioService')
 const tkservice = require('../../infra/auth/jwt_service')
 
 router.get("/:data", (req,resp) =>{

@@ -1,5 +1,6 @@
-const model = require('../models/Aluno');
-const bcriptService = require('./criptografiaService');
+const model = require('../../models/Aluno');
+const bcriptService = require('../seguranca/criptografiaService');
+const dbService = require("../../mongo/dbService")
 
 const login = async (senha, mat) => {
     aluno = await model.findOne({matricula: mat});
@@ -12,14 +13,7 @@ const login = async (senha, mat) => {
 const save = async (body) => {
     body['senha'] = bcriptService.criptografar(body.senha);
     body.roles = ["ROLE_USER", "ROLE_ALUNO"]
-    try{
-        aluno = await model.create(body);
-    } catch(e){
-        console.log(e);
-        return null;
-    }
-    console.log(aluno);
-    return aluno;
+    return await dbService.create_new(body, model);
 };
 
 const getById = async (id) => {
