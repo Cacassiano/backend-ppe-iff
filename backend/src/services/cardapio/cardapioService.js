@@ -1,2 +1,3 @@
-const model = require('../../models/Cardapio')
-const modelRefeicao = require('../../models/Refeicoes')
+const modelCard = require('../../models/Cardapio')
+const modelRef = require('../../models/Refeicoes')
+

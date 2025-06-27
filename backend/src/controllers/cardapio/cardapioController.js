@@ -10,7 +10,7 @@ router.get("/:data_inicial/:data_final", (req, resp) => {
     resp.send("Em producao")
 });
 
-// router.use("*", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
+router.use("/*", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
 router.post("/criar-cardapio/:data", (req, resp) => {
     resp.send("Em producao")
 })
