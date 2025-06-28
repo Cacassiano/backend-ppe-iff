@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<script src="js/script.js" defer></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css"> 
+</head>
+<body>
+   <div id="topo">
+         <header>
+            <img src="assets/img/IFF-PC2.jpg" class="pc2" height="50px">
+            <img src="assets\img\IFF-PC.jpg" class="pc" height="50px">
+            <img src="assets\img\IFF-MOBILE2.jpg" class="mobile" height="50px">
+         </header>
+   </div>
+   <div class="registro">
+        <div id="title-registro"> Registro Cardápio IFF</div>
+        <form action="input" class="formulario">
+            <label for="matricula"> Matrícula: </label>
+            <input type="text" name="matricula" id="matricula"> <br>
+            <label for="nome"> Primeiro Nome: </label>
+            <input type="text" name="nome" id="nome"> <br>
+            <label for="sobrenome"> Último Sobrenome: </label>
+            <input type="text" name="sobrenome" id="sobrenome"> <br>
+            <label for="senha"> Senha: </label>
+            <input type="text" name="senha" id="senha"> <br>
+            <label for="confirmar-senha"> Confirme sua senha: </label>
+            <input type="text" name="confirmar-senha" id="confirmar-senha"> <br>
+            <label for="podealmocar"> Você pode almoçar? </label>
+            <select name="podealmocar" id="podealmocar">
+                <option value="n/a"> --- </option>
+                <option value="sim"> Sim </option>
+                <option value="nao"> Não </option>
+            </select>
+        </form>
+   </div>
+</body>
+</html>

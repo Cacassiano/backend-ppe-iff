@@ -31,6 +31,9 @@ html, body{
 .pc{
     display:block;
 }
+.pc2{
+    display: none;
+}
 .carrossel{
     position: relative;
     width: 90%;
@@ -75,9 +78,89 @@ html, body{
 .next::before{
     content:">";
 }
-
+.login{
+    background-color: #00140f;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 50vw;
+    height: 100vw;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+#title-login{
+    font-size: 48px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: white;
+    display: block;
+    text-align: center;
+    padding-top: 70px;
+}
+#subtitle-login{
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: azure;
+    display: block;
+    text-align: center;
+    
+}
+.formulario{
+    padding-top: 36px;
+    padding-left: 100px;
+    padding-right: 100px;
+    width: 50%;
+}
+.formulario label{
+    color: white;
+    font-size: 24px;
+    display: block;
+}
+.formulario input{
+    font-size: 24px;
+    width: 100%
+}
+#title-registro{
+    font-size: 36px;
+    padding-left: 100px;
+    padding-top: 10px;
+    color: white;
+}
+#registro{
+    padding-left: 100px;
+    color: white;
+    margin-top: 20px;
+    display: flex;
+    font-size: 16px;
+}
+.registro select{
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-sizing: 12px 16px;
+}
+.registro input{
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
 .prev { left: 10px; }
 .next {right: 10px; }
+@media (max-width: 1366px){
+    .pc{
+        display: none;
+    }
+    .mobile{
+        display: none;
+    }
+    #pc2{
+        display: block;
+    }
+    #topo img{
+        margin-left: 18px;
+        margin-right: 18px;
+    }
+}
 @media (max-width: 600px){
     #topo img{
         margin-left: 15px;
@@ -90,5 +173,30 @@ html, body{
     }
     .pc{
         display: none;
+    }
+    #title-registro{
+        padding-left: 30px;
+    }
+    .formulario{
+        padding-left: 30px;
+        width: 85%;
+    }
+    .formulario input{
+        font-size: 24px;
+    }
+    .login{
+        background-color: #00140f;
+        position: fixed;
+        right: 0;
+        top: 60px;
+        width: 100vw;
+        height: 150vw;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
+        border-top-left-radius: 0px;
+    }
+    #registro{
+        padding-left: 30px;
+        margin-top: 10px;
     }
 }

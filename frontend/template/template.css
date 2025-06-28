@@ -1,0 +1,37 @@
+html, body{
+    height: 100%;
+    margin: 0;
+    background-color: #002a1e;
+}
+#topo img{
+    margin-left: 20px;
+    border-radius: 30px;
+}
+#topo{
+    display: flex;
+    background-color: #004f35;
+    padding: 5px 15px;
+    gap: 10px;
+    justify-content: space-between;
+}
+.mobile{
+    display: none;
+}
+.pc{
+    display:block;
+}
+
+
+.prev { left: 10px; }
+.next {right: 10px; }
+@media (max-width: 600px){
+    #topo img{
+        margin-left: 15px;
+    }
+    .mobile{
+        display: block;
+    }
+    .pc{
+        display: none;
+    }
+}
