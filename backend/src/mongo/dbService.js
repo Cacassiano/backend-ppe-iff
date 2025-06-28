@@ -10,6 +10,19 @@ const create_new = async (data, model) => {
     return objeto;
 }
 
+const findOneBy = async(querry, model) => {
+    let objeto;
+    try{
+        objeto = await model.findOne(querry);
+        console.log(objeto);
+        return objeto;
+    } catch(e) {
+        console.log("###Erro controlado: "+e)
+        return null;
+    }
+}
+
 module.exports = {
     create_new,
+    findOneBy,
 }
