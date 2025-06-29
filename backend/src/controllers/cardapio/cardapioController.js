@@ -9,7 +9,7 @@ router.get("/hoje", async (req,resp) =>{
     } catch(e) {
         return resp.status(500).json({
             message: "Erro ao procurar cardapio",
-            erro: e
+            erro: e.message
         });
     }
     return resp.status(200).json({
@@ -24,9 +24,26 @@ router.get("/:data_inicial/:data_final", (req, resp) => {
 });
 
 
-//router.use("/*", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
-router.post("/criar-cardapio/:data", (req, resp) => {
-    resp.send("Em producao")
+router.use("/criar", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
+router.post("/criar", async(req, resp) => {
+    console.log(req.body);
+    if(req.body.data !== undefined || req.body.refeicoes !== undefined || req.body.refeicoes !== null ) {
+        try{
+            cardapio = await service.createCardapio(new Date(req.body.data), req.body.refeicoes);
+            return resp.status(201).json({
+                cardapio:cardapio
+            });
+        } catch(e) {
+            return resp.status(500).json({
+                message: "Erro ao tentar criar cardapio",
+                erro: e
+            })
+        }
+    } else {
+        return resp.status(400).json({
+            message: "Informações requeridas não forama enviadas"
+        })
+    }
 })
 router.post("/add-refeicao/:cardapio_id", (req, resp) => {
     resp.send("Em producao")

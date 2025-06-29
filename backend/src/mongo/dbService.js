@@ -6,7 +6,7 @@ const create_new = async (data, model) => {
         console.log(e);
         return null;
     }
-    console.log(objeto);
+    //console.log(objeto);
     return objeto;
 }
 

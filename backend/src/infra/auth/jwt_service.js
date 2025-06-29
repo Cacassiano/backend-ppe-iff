@@ -13,16 +13,12 @@ const validar = (...roles) => {
         if (!token) return resp.status(401).send("Entrada restrita");
         try {
             const conteudo = await jwt.verify(token, chave);
-            console.log(conteudo)
             if(conteudo.id === undefined || conteudo.senha === undefined || conteudo.subject === undefined ) return resp.status(403).json({message: "token invalido"});
 
             let sujeito = await alunoService.getById(conteudo.id);
             
             if(!sujeito) sujeito = await funcionariosService.getById(conteudo.id);
             if(!sujeito || !bcriptService.comparar(conteudo.senha, sujeito.senha)) return resp.status(403).json({message: "user nao existe"});
-
-            console.log(sujeito)
-            console.log(roles)
             roles.forEach(role => {
                 if(!sujeito.roles.includes(role)){
                     return resp.status(403).json({message: "acesso não autorizado"});
@@ -39,9 +35,6 @@ const validar = (...roles) => {
 };
 
 const criarToken = (sujeito, id, senha) => {
-    console.log(sujeito)
-    console.log(id);
-    console.log(senha)
     token = jwt.sign({
         subject: sujeito,
         id: id,
