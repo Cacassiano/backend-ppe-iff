@@ -3,23 +3,19 @@ const create_new = async (data, model) => {
     try{
         objeto = await model.create(data);
     } catch(e){
-        console.log(e);
-        return null;
+        console.log(`Erro ao criar novo model no db com os dados: \n ${data} \n`);
+        throw e;
     }
-    //console.log(objeto);
     return objeto;
 }
 
 const findOneBy = async(querry, model) => {
     let objeto;
-    try{
-        objeto = await model.findOne(querry);
-        console.log(objeto);
-        return objeto;
-    } catch(e) {
-        console.log("###Erro controlado: "+e)
-        return null;
-    }
+
+    objeto = await model.findOne(querry);
+    if (!objeto) return null
+    return objeto;
+    
 }
 
 module.exports = {

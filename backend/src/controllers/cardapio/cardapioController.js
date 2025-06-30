@@ -36,12 +36,12 @@ router.post("/criar", async(req, resp) => {
         } catch(e) {
             return resp.status(500).json({
                 message: "Erro ao tentar criar cardapio",
-                erro: e
+                erro: e.message
             })
         }
     } else {
         return resp.status(400).json({
-            message: "Informações requeridas não forama enviadas"
+            message: "Informações requeridas não foram enviadas"
         })
     }
 })

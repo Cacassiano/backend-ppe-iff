@@ -6,9 +6,7 @@ const getCardapioByData = async(data) => {
     [data,] = data.toISOString().split("T");
     console.log(data)
     cardapio = await dbService.findOneBy({dia:new Date(data)}, modelCard)
-    if (!cardapio) {
-        throw "Cardapio não encontrado"
-    }
+    if (!cardapio) throw "Cardapio não encontrado"
     return cardapio;
 }
 
@@ -27,7 +25,11 @@ const createCardapio = async (dia, refeicoes) => {
         para economizar espaço desnecessario
     */
     cardapio = await setRefeicoes(cardapio, refeicoes)
-    return await dbService.create_new(cardapio, modelCard);
+    try{
+        cardapio = await dbService.create_new(cardapio, modelCard)
+    } catch(e) {
+        throw e;
+    }
 } 
 
 const setRefeicoes = async (obj, refeicoes) =>{
