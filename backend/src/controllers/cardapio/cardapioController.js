@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const service = require('../../services/cardapio/cardapioService')
 const tkservice = require('../../infra/auth/jwt_service')
-router.use("/hoje",tkservice.validar("ROLE_ALUNO"))
+
 router.get("/hoje", async (req,resp) =>{
     let cardapio;
     try{
@@ -18,7 +18,6 @@ router.get("/hoje", async (req,resp) =>{
     
 });
 
-router.use("/:data_inicial/:data_final",tkservice.validar("ROLE_ALUNO"))
 router.get("/:data_inicial/:data_final", (req, resp) => {
     resp.send("Em producao")
 });
@@ -45,8 +44,41 @@ router.post("/criar", async(req, resp) => {
         })
     }
 })
-router.post("/add-refeicao/:cardapio_id", (req, resp) => {
-    resp.send("Em producao")
+
+/*
+    add: [
+        {
+            // refeicaos
+        }
+    ],
+    rm: [
+        {
+            refeicao
+        }
+    ]
+    upd: [
+        {
+            refeicao
+        }
+    ]
+
+*/
+router.post("/:id_cardapio/operacoes-refeicao", async (req, resp) => {
+    if(req.body.add == undefined && req.body.rm == undefined && req.body.upd == undefined) 
+        return resp.status(400).json({message: "Informações requeridas nao informadas"});
+    try{
+        await service.refeicao_ops(req.body, req.params.id_cardapio);
+        return resp.status(200).json({
+            message: "Todas as operações foram realizadas corretamente",
+            status: "Sucesso"
+        })
+    } catch(e) {
+        return resp.status(500).json(
+            {
+                message: "Ocorreu um erro ao tentar fazer as operações", 
+                erro: e.message
+            });
+    }
 })
 
 

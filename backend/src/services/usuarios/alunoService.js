@@ -13,16 +13,16 @@ const save = async (body) => {
     body['senha'] = bcriptService.criptografar(body.senha);
     body.roles = ["ROLE_USER", "ROLE_ALUNO"]
     try{
-        aluno = await dbService.create_new(body, model);
+        aluno = await dbService.save(body, model);
     } catch (e) {
-        throw e;
+        return null;
     }
     return aluno;
 };
 
 const getById = async (id) => {
     aluno = await dbService.findOneBy({_id: id}, model); 
-    if(!aluno) throw "aluno não encontrado";
+    if(!aluno) return null;
     return aluno;
 }
 

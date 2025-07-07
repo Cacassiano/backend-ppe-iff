@@ -1,7 +1,7 @@
-const create_new = async (data, model) => {
+const save = async (data, model) => {
     let objeto
     try{
-        objeto = await model.create(data);
+        objeto = await new model(data).save();
     } catch(e){
         console.log(`Erro ao criar novo model no db com os dados: \n ${data} \n`);
         throw e;
@@ -9,16 +9,16 @@ const create_new = async (data, model) => {
     return objeto;
 }
 
-const findOneBy = async(querry, model) => {
+const findOneBy = async(querry, model, populate=null) => {
     let objeto;
-
-    objeto = await model.findOne(querry);
+    if(!populate) objeto = await model.findOne(querry).populate(populate).exec();
+    else objeto = await model.findOne(querry);
     if (!objeto) return null
     return objeto;
     
 }
 
 module.exports = {
-    create_new,
+    save,
     findOneBy,
 }

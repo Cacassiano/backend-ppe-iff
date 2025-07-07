@@ -29,7 +29,7 @@ const validar = (...roles) => {
             return next();
         } catch(err) {
             console.log(err);
-            return resp.status(403).send("acesso negado");
+            return resp.status(403).json({message: "acesso negado", erro: err});
         }
     }
 };

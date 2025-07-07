@@ -49,6 +49,7 @@ router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));
 
 router.get("/detalhes", async (req,resp) => {
     aluno = await Aluno.getById(req.user.id);
+    if(!aluno) return resp.status(404).json({message: "aluno não existe"});
     console.log(aluno);
     resp.status(200).json(aluno);
 })
