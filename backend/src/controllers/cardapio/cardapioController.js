@@ -18,9 +18,10 @@ router.get("/hoje", async (req,resp) =>{
     
 });
 
-router.get("/:data_inicial/:data_final", (req, resp) => {
-    resp.send("Em producao")
-});
+//  a ser desenvolvido
+// router.get("/:data_inicial/:data_final", (req, resp) => {
+//     resp.send("Em producao")
+// });
 
 
 router.use("/criar", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
@@ -45,24 +46,7 @@ router.post("/criar", async(req, resp) => {
     }
 })
 
-/*
-    add: [
-        {
-            // refeicaos
-        }
-    ],
-    rm: [
-        {
-            refeicao
-        }
-    ]
-    upd: [
-        {
-            refeicao
-        }
-    ]
 
-*/
 router.post("/:id_cardapio/operacoes-refeicao", async (req, resp) => {
     if(req.body.add == undefined && req.body.rm == undefined && req.body.upd == undefined) 
         return resp.status(400).json({message: "Informações requeridas nao informadas"});
@@ -80,6 +64,25 @@ router.post("/:id_cardapio/operacoes-refeicao", async (req, resp) => {
             });
     }
 })
+
+/* Body para o endpoint acima
+    add: [
+        {
+            // refeicaos
+        }
+    ],
+    rm: [
+        {
+            refeicao
+        }
+    ]
+    upd: [
+        {
+            refeicao
+        }
+    ]
+
+*/
 
 
 module.exports = router;
