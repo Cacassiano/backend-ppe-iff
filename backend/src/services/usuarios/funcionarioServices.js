@@ -5,7 +5,11 @@ const dbService = require("../../mongo/dbService")
 const save = async (body, roles) => {
     body.senha = bcript.criptografar(body.senha);
     body.roles = ["ROLE_USER", "ROLE_FUNC"].concat(roles)
-    return await dbService.create_new(body, model);
+    try{
+        return await dbService.save(body, model);
+    } catch (e) {
+        return null;
+    }
 };
 
 const login = async (senha, identificador) => {
