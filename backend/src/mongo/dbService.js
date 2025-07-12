@@ -1,7 +1,7 @@
 const save = async (data, model) => {
-    let objeto
+    let objeto = new model(data);
     try{
-        objeto = await new model(data).save();
+        objeto = await objeto.save();
     } catch(e){
         console.log(`Erro ao criar novo model no db com os dados: \n ${data} \n`);
         throw e;
@@ -18,7 +18,6 @@ const findOneBy = async(querry, model, populateModel=null, populatePaths = null)
     return objeto;
     
 }
-
 const deleteOneBy = async (querry, model) => {
     let object;
     object = await model.deleteOne(querry);

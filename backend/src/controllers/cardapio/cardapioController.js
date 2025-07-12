@@ -5,7 +5,7 @@ const tkservice = require('../../infra/auth/jwt_service')
 router.get("/hoje", async (req,resp) =>{
     let cardapio;
     try{
-        cardapio = await service.getCardapioByData(new Date("2025-07-07"));
+        cardapio = await service.getCardapioByData(new Date(Date.now()));
     } catch(e) {
         return resp.status(500).json({
             message: "Erro ao procurar cardapio",
