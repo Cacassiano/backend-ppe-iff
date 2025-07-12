@@ -1,17 +1,40 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    dia_correspondente: {
+    dia: {
         type: Date,
-        required: false,
-        unique:true
+        required: true,
+        unique: process.env.STATUS = "PRODUCAO" ? false : true
     }, 
-    refeicoes:[
+    almoco:[
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Refeicoes"
+            ref: "Refeicao",
+            required: true
         }
     ],
+    cafe:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Refeicao",
+            required: true
+        }
+    ],
+    lanche:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Refeicao",
+            required: true
+        }
+    ],
+    jantar:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Refeicao",
+            required: true
+        }
+    ],
+
 }, {timestamps: true, id: true});
 
 const model = mongoose.model("Cardapio", schema)

@@ -4,16 +4,16 @@ const schema = new mongoose.Schema({
     tipo_refeicao: {
         type: String,
         unique:false,
-        required:false
+        required:true
     },
-    prato_principal: {
+    comida: {
         type:String,
         unique:false,
-        required:false
+        required:true
     },
     bebida: {
         type:String,
-        required:false,
+        default:"NA",
         unique:false
     }
 }, {timestamps:true, id:true});
