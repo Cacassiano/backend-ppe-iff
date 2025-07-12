@@ -9,16 +9,26 @@ const save = async (data, model) => {
     return objeto;
 }
 
-const findOneBy = async(querry, model, populate=null) => {
+const findOneBy = async(querry, model, populateModel=null, populatePaths = null) => {
     let objeto;
-    if(!populate) objeto = await model.findOne(querry).populate(populate).exec();
-    else objeto = await model.findOne(querry);
+    objeto = await model.findOne(querry);
     if (!objeto) return null
+    objeto = (populateModel ? await populateModel.populate(objeto, {path: populatePaths}): objeto);
+    console.log(objeto);
     return objeto;
     
+}
+
+const deleteOneBy = async (querry, model) => {
+    let object;
+    object = await model.deleteOne(querry);
+    console.log(object);
+    if(!object) throw new Error("Nenhum item foi deletado");
+    return object
 }
 
 module.exports = {
     save,
     findOneBy,
+    deleteOneBy,
 }

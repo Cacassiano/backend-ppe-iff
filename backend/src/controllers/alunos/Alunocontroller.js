@@ -38,7 +38,7 @@ router.post("/login", async (req,resp) => {
             });
         } catch(e) {
             console.log("erro no login");
-            return resp.status(404).json({message: e});
+            return resp.status(404).json({message: e.message});
         }
     } 
     return resp.status(400).json({messsage: "Informações requeridas não foram enviadas"});
