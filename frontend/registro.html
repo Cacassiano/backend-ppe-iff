@@ -15,9 +15,9 @@
             <img src="assets\img\IFF-MOBILE2.jpg" class="mobile" height="50px">
          </header>
    </div>
-   <div class="registro">
+   <div id="registroDiv">
         <div id="title-registro"> Registro Cardápio IFF</div>
-        <form action="input" class="formulario">
+        <form id="formRegistro">
             <label for="matricula"> Matrícula: </label>
             <input type="text" name="matricula" id="matricula"> <br>
             <label for="nome"> Primeiro Nome: </label>
@@ -28,13 +28,15 @@
             <input type="text" name="senha" id="senha"> <br>
             <label for="confirmar-senha"> Confirme sua senha: </label>
             <input type="text" name="confirmar-senha" id="confirmar-senha"> <br>
-            <label for="podealmocar"> Você pode almoçar? </label>
-            <select name="podealmocar" id="podealmocar">
+            <label for="podeAlmocar"> Você pode almoçar? </label>
+            <select name="podeAlmocar" id="podeAlmocar">
                 <option value="n/a"> --- </option>
                 <option value="sim"> Sim </option>
                 <option value="nao"> Não </option>
-            </select>
+            </select><br>
+            <button type="submit" id="criarConta">Criar conta</button>
         </form>
+        <h1 id="avisos"></h1>
    </div>
 </body>
 </html>

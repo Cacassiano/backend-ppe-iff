@@ -29,8 +29,8 @@ const schema = new mongoose.Schema({
     },
     roles: [
         {
-            type:String,
-            default:"ROLE_ALUNO"
+            type:[String],
+            default:["ROLE_ALUNO"]
         }
     ]
 }, {timestamps:true, id:true});

@@ -14,8 +14,13 @@ const save = async (body) => {
     body.roles = ["ROLE_USER", "ROLE_ALUNO"]
     try{
         aluno = await dbService.save(body, model);
+        return aluno;
     } catch (e) {
-        return null;
+        console.error("erro alunoService: ", e.message);
+        if (e.code == 11000) {
+            console.error("MATRICULA JA REGISTRADA") // isso sera tratado no script
+            return resp.status(409).json({ message: "Matrícula já cadastrada" });
+        }
     }
     return aluno;
 };

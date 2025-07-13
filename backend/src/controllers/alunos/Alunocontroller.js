@@ -3,7 +3,6 @@ const Aluno =  require('../../services/usuarios/alunoService');
 const jwtService = require("../../infra/auth/jwt_service");
 
 router.post("/register", async (req,resp) => {
-    console.log(req.body);
     if(req.body.matricula != undefined &&
         req.body.nome != undefined &&
         req.body.sobrenome != undefined &&
@@ -11,6 +10,7 @@ router.post("/register", async (req,resp) => {
         req.body.senha != undefined
     ) {
         senha = req.body.senha;
+        req.body.podeAlmocar = (req.body.podeAlmocar == "sim") ? true : false;
         try{
             aluno = await Aluno.save(req.body);
             token = jwtService.criarToken(req.body.matricula, aluno.id, senha);
@@ -19,8 +19,8 @@ router.post("/register", async (req,resp) => {
                     token: token
                 });
         } catch (e) {
-            console.log("erro ao tentar criar novo aluno");
-            return resp.status(404).json({message: e});
+            console.log("erro ao tentar criar novo aluno: ", e.message);
+            return resp.status(404).json({message: e.message});
         }
     } 
     return resp.status(400).json({message:"Informações faltando na requisição"});
