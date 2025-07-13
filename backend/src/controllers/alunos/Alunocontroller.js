@@ -37,7 +37,7 @@ router.post("/login", async (req,resp) => {
                 token: token
             });
         } catch(e) {
-            console.log("erro no login");
+            console.log("erro no login", e);
             return resp.status(404).json({message: e.message});
         }
     } 

@@ -15,16 +15,18 @@
             <img src="assets\img\IFF-MOBILE2.jpg" class="mobile" height="50px">
          </header>
    </div>
-   <div class="login">
+   <div id="loginDiv">
         <div id="title-login"> Login </div>
         <div id="subtitle-login"> Acesso ao Cardápio Digital IFF </div>
-        <form action="input" class="formulario" style="width: 80%"> 
-            <label for="login">Login: </label> <br>
-            <input type="text" id="login" name="login"><br> <br>
+        <form id="loginForm" style="width: 80%"> 
+            <label for="matricula">Matrícula: </label> <br>
+            <input type="text" id="matricula" name="matricula"><br> <br>
             <label for="senha"> Senha:</label>
             <input type="text" id="senha" name="senha"> <br>
+            <button type="submit" id="loginButton">Fazer login</button>
         </form>
         <a href="registro.html" id="registro"> Criar Conta </a>
    </div>
 </body>
+<script src="js/script.js"></script>
 </html>
