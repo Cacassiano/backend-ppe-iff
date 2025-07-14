@@ -1,7 +1,7 @@
 html, body{
     height: 100%;
     margin: 0;
-    background-color: #dad2c1;
+    background-color: #ebf1f1;
 }
 #topo img{
     margin-left: 20px;
@@ -78,7 +78,8 @@ html, body{
 #loginForm input{
     border-radius: 1vw;
     font-size: 24px;
-    width: 100%
+    width: 100%;
+    margin-bottom: 10px;
 }
 #title-registro{
     font-weight: bold;
