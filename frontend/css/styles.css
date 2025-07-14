@@ -48,6 +48,21 @@
     margin-left: auto;
     height: 100vh;
     width: 50vw;
+    flex-direction: column;
+}
+#loginDiv h1{
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    margin: 0;
+    font-size: 56px;
+}
+#loginDiv h2{
+    text-align: center;
+    color: white;
+    margin-top: 0px;
+    font-size: 36px;
+    padding-bottom: 20px;
 }
 
 #servicosDiv{
@@ -64,22 +79,22 @@
     color: rgb(0, 0, 0);
 }
 #loginForm{
-    padding-top: 36px;  
-    padding-left: 100px;
-    padding-right: 100px;
+    align-items: center;
+    display: flex;
+    padding: 36 0 0 10%;
+    flex-direction: column;
     width: 50%;
     margin-bottom: 30%;
 }
 #loginForm label{
     color: white;
     font-size: 24px;
-    display: block;
 }
 #loginForm input{
     padding: 6px;
-    border-radius: 1vw;
+    border-radius: 15px;
     font-size: 24px;
-    width: 80%;
+    width: 70%;
     margin-bottom: 10px;
 }
 #title-registro{
@@ -93,8 +108,15 @@
 
 #loginButton{
     margin-top: 15;
-    padding: 15px;
+    padding: 10px 70px;
     border: none;
+    font-size: 24px;
+}
+#registerLink{
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+    text-align: center;
 }
 
 #loginButton:hover{
