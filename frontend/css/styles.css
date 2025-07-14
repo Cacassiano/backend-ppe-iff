@@ -1,16 +1,20 @@
-html, body{
+    html, body{
     height: 100%;
     margin: 0;
-    background-color: #ebf1f1;
+    background-color: #dad2c1;
 }
 #topo img{
     margin-left: 20px;
     border-radius: 30px;
 }
+#tudo {
+    display: flex;
+}
 #topo{
     height: 50px;
     display: flex;
     background-color: #004f35;
+    z-index: 2;
     padding: 5px 15px;
     gap: 10px;
     justify-content: space-between;
@@ -37,38 +41,34 @@ html, body{
 }
 
 #loginDiv{
-    background-color: #00140f;
-    position: fixed;
-    right: 0;
-    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #011b14;
+    margin-left: auto;
+    height: 100vh;
     width: 50vw;
-    height: 100vw;
-    border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
-}
-#title-login{
-    font-size: 48px;
-    font-family: sans-serif;
-    font-weight: bold;
-    color: rgb(255, 255, 255);
-    display: block;
-    text-align: center;
-    padding-top: 70px;
-}
-#subtitle-login{
-    font-size: 24px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgb(255, 255, 255);
-    display: block;
-    text-align: center;
-    
 }
 
+#servicosDiv{
+    display: flex;
+    height: 50vh;
+    background-color: chartreuse;
+}
+
+#servicos-title{
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 36px;
+    padding-top: 10px;
+    color: rgb(0, 0, 0);
+}
 #loginForm{
-    padding-top: 36px;
+    padding-top: 36px;  
     padding-left: 100px;
     padding-right: 100px;
     width: 50%;
+    margin-bottom: 30%;
 }
 #loginForm label{
     color: white;
@@ -76,9 +76,10 @@ html, body{
     display: block;
 }
 #loginForm input{
+    padding: 6px;
     border-radius: 1vw;
     font-size: 24px;
-    width: 100%;
+    width: 80%;
     margin-bottom: 10px;
 }
 #title-registro{
@@ -89,6 +90,18 @@ html, body{
     padding-top: 10px;
     color: rgb(0, 0, 0);
 }
+
+#loginButton{
+    margin-top: 15;
+    padding: 15px;
+    border: none;
+}
+
+#loginButton:hover{
+    cursor: pointer;
+    background-color: darkgreen;
+}
+
 #registroDiv{
     margin-left: 40px;
 }
@@ -109,23 +122,7 @@ html, body{
     width: 50%;
     margin-bottom: 10px;
 }
-.prev { left: 10px; }
-.next {right: 10px; }
-@media (max-width: 1366px){
-    .pc{
-        display: none;
-    }
-    .mobile{
-        display: none;
-    }
-    #pc2{
-        display: block;
-    }
-    #topo img{
-        margin-left: 18px;
-        margin-right: 18px;
-    }
-}
+
 @media (max-width: 600px){
     #topo img{
         margin-left: 15px;
