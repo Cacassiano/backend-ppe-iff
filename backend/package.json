@@ -4,7 +4,7 @@
   "description": "Backend de uma aplicacao de cardapio para o iff quissamã",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "npx nodemon app.js"
   },
   "repository": {
@@ -27,5 +27,9 @@
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",
     "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "jest": "^30.0.4",
+    "supertest": "^7.1.3"
   }
 }

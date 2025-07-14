@@ -41,7 +41,7 @@ router.post("/login", async (req,resp) => {
             return resp.status(404).json({message: e.message});
         }
     } 
-    return resp.status(400).json({messsage: "Informações requeridas não foram enviadas"});
+    return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
 
 });
 

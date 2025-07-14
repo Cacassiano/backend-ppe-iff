@@ -1,5 +1,5 @@
 const model =  require("../../models/Funcionario");
-const bcript = require('../seguranca/criptografiaService');
+const bcript = require('../../infra/auth/criptografiaService');
 const dbService = require("../../mongo/dbService")
 
 const save = async (body, roles) => {
