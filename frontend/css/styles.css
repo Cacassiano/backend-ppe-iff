@@ -1,15 +1,20 @@
-html, body{
+    html, body{
     height: 100%;
     margin: 0;
-    background-color: #002a1e;
+    background-color: #dad2c1;
 }
 #topo img{
     margin-left: 20px;
     border-radius: 30px;
 }
+#tudo {
+    display: flex;
+}
 #topo{
+    height: 50px;
     display: flex;
     background-color: #004f35;
+    z-index: 2;
     padding: 5px 15px;
     gap: 10px;
     justify-content: space-between;
@@ -34,139 +39,137 @@ html, body{
 .pc2{
     display: none;
 }
-.carrossel{
-    position: relative;
-    width: 90%;
-    max-width: 1270px;
-    margin: 40px auto;
-    overflow: hidden;
-    border-radius: 20px;
-    aspect-ratio: 16 / 9;
-}
-.slides{
+
+#loginDiv{
     display: flex;
-    transition: transform .5s ease-in-out;
+    justify-content: center;
+    align-items: center;
+    background-color: #011b14;
+    margin-left: auto;
+    height: 100vh;
+    width: 50vw;
+    flex-direction: column;
 }
-.slides img{
-    width: 100%;
-    height: 100%;
-    flex-shrink: 0;
-    object-fit: cover;
-    transition: transform 0.5s ease;
+#loginDiv h1{
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    margin: 0;
+    font-size: 56px;
+}
+#loginDiv h2{
+    text-align: center;
+    color: white;
+    margin-top: 0px;
+    font-size: 36px;
+    padding-bottom: 20px;
 }
 
-.prev, .next{
-    position:absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    cursor: pointer;
-    font-size: 24px;
-    border-radius: 50%;
+#servicosDiv{
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
 }
-.prev::before{
-    content:"<";
-}
-.next::before{
-    content:">";
-}
-.login{
-    background-color: #00140f;
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 50vw;
-    height: 100vw;
-    border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
-}
-#title-login{
-    font-size: 48px;
-    font-family: sans-serif;
+
+#tituloServicos{
     font-weight: bold;
-    color: white;
-    display: block;
     text-align: center;
-    padding-top: 70px;
+    color: rgb(0, 0, 0);
+    margin: 20px 0;
+    font-size: 56px;
+    padding-bottom: 50px;
 }
-#subtitle-login{
-    font-size: 24px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: azure;
-    display: block;
-    text-align: center;
-    
+
+#servicosContainer {
+    width: 50vw;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.formulario{
-    padding-top: 36px;
-    padding-left: 100px;
-    padding-right: 100px;
+
+#servicosDiv img{
+    width: 250px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#servicosDiv img:hover{
+    transform: scale(1.05);
+    cursor: pointer;
+}
+#loginForm{
+    align-items: center;
+    display: flex;
+    padding: 36 0 0 10%;
+    flex-direction: column;
     width: 50%;
+    margin-bottom: 30%;
 }
-.formulario label{
-    color: white;
+#loginForm input{
+    padding: 6px;
+    border-radius: 15px;
     font-size: 24px;
-    display: block;
-}
-.formulario input{
-    font-size: 24px;
-    width: 100%
+    width: 70%;
+    margin-bottom: 10px;
+    border: 3px solid #000a08;
 }
 #title-registro{
+    font-weight: bold;
+    font-family: sans-serif;
     font-size: 36px;
-    padding-left: 100px;
+    padding-left: 250px;
     padding-top: 10px;
-    color: white;
+    color: rgb(0, 0, 0);
+    
 }
-#registro{
-    padding-left: 100px;
-    color: white;
-    margin-top: 20px;
-    display: flex;
-    font-size: 16px;
+
+#loginButton{
+    margin-top: 15;
+    padding: 10px 70px;
+    border: 3px solid #000a08;
+    font-size: 24px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 }
-.registro select{
+#registerLink{
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
+#loginButton:hover{
+    color: white;
+    cursor: pointer;
+    background-color: darkgreen;
+    transform: scale(1.05);
+}
+
+#registroDiv{
+    margin-left: 40px;
+}
+#registroDiv select{
     font-size: 16px;
     padding: 8px 16px;
     border-radius: 8px;
     box-sizing: 12px 16px;
 }
-.registro input{
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
+#registroDiv label{
+    color: black;
+    font-size: 24px;
 }
-.prev { left: 10px; }
-.next {right: 10px; }
-@media (max-width: 1366px){
-    .pc{
-        display: none;
-    }
-    .mobile{
-        display: none;
-    }
-    #pc2{
-        display: block;
-    }
-    #topo img{
-        margin-left: 18px;
-        margin-right: 18px;
-    }
+#registroDiv input{
+    border-radius: 10px;
+    font-size: 24px;
+    display: block;
+    width: 50%;
+    margin-bottom: 10px;
 }
 @media (max-width: 600px){
     #topo img{
         margin-left: 15px;
-    }
-    .carrossel{
-        max-height: 250px;
     }
     .mobile{
         display: block;
@@ -177,14 +180,14 @@ html, body{
     #title-registro{
         padding-left: 30px;
     }
-    .formulario{
+    #loginForm{
         padding-left: 30px;
         width: 85%;
     }
-    .formulario input{
+    #loginForm input{
         font-size: 24px;
     }
-    .login{
+    #loginDiv{
         background-color: #00140f;
         position: fixed;
         right: 0;
@@ -195,8 +198,11 @@ html, body{
         border-bottom-right-radius: 25px;
         border-top-left-radius: 0px;
     }
-    #registro{
-        padding-left: 30px;
+    #registroDiv{
+        padding-left: 15px;
         margin-top: 10px;
+    }
+    #registroDiv input{
+        width: 80%;
     }
 }

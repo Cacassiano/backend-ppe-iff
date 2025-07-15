@@ -3,11 +3,12 @@ const Aluno =  require('../../services/usuarios/alunoService');
 const jwtService = require("../../infra/auth/jwt_service");
 
 router.post("/register", async (req,resp) => {
-    if(!req.body.matricula || !req.body.nome || !req.body.sobrenome || (req.body.podeAlmocar === undefined || req.body.podeAlmocar === null) || !req.body.senha) {
+    if(!req.body.matricula || !req.body.nome || !req.body.sobrenome || !req.body.podeAlmocar || !req.body.senha) {
         return resp.status(400).json({message:"Informações faltando na requisição"});
     }
 
     senha = req.body.senha;
+    req.body.podeAlmocar = (req.body.podeAlmocar == "sim") ? true : false;
     try{
         aluno = await Aluno.save(req.body);
         token = jwtService.criarToken(req.body.matricula, aluno.id, senha);
@@ -32,7 +33,12 @@ router.post("/login", async (req,resp) => {
             token: token
         });
     } catch(e) {
-        console.log("erro no login: "+ e.message);
+
+        if (e.code == 11000) {
+            console.error("MATRICULA JA REGISTRADA") // isso sera tratado no script
+            return resp.status(409).json({ message: "Matrícula já cadastrada" });
+        }
+        console.error("erro no login: "+ e.message);
         return resp.status(404).json({message: e.message});
     }
 });

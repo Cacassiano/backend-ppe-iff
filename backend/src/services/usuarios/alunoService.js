@@ -14,7 +14,9 @@ const save = async (body) => {
     body.roles = ["ROLE_USER", "ROLE_ALUNO"]
     try{
         aluno = await dbService.save(body, model);
+        return aluno;
     } catch (e) {
+        console.error("erro alunoService: ", e.message);
         throw e;
     }
     return aluno;

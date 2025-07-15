@@ -64,8 +64,8 @@ describe("Post /aluno/register", () => {
         const resp = await request(app)
             .post("/aluno/register")
             .send(alunoTeste)
-        expect(resp.statusCode).toEqual(404);
-        expect(resp.body.message).toMatch("duplicate key error");
+        expect(resp.statusCode).toEqual(409);
+        expect(resp.body.message).toEqual("Matrícula já cadastrada");
     });
 })
 

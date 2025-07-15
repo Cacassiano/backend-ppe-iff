@@ -1,50 +1,44 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const slides = document.querySelector('.slides');
-  const originalSlides = Array.from(slides.children);
+document.addEventListener("DOMContentLoaded", () => { // ao terminar de carregar a pagina...
+    const path = window.location.pathname
 
-  const firstClone = originalSlides[0].cloneNode(true);
-  const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+    if (path.includes('login.html')) { // se for a pagina de login...
+        const form = document.getElementById("loginForm");
 
-  slides.appendChild(firstClone);
-  slides.insertBefore(lastClone, slides.firstChild);
+        form.addEventListener("submit", async(e) => { // quando houver o submit no form
+            e.preventDefault(); // nao deixa atualizar o form quando submit
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries()); // esses montam os dados pro backend
+            const response = await fetch("http://localhost:8080/aluno/login", { // lugar que a api espera
+                method: 'POST',
+                headers: {"Content-Type": "application/json"}, // especifica que é json
+                body: JSON.stringify(data) // transforma os dados do form em um objeto json
+            });
+    });
 
-  const totalSlides = slides.children.length;
-  let currentIndex = 1;
+    } else if (path.includes('registro.html')) { // se for a pagina de registro
+        const avisos = document.getElementById("avisos");
+        const form = document.getElementById("formRegistro");
 
-  slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+        form.addEventListener("submit", async(e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            if (formData.get("senha") != formData.get("confirmar-senha")) {
+                avisos.style.color = "red";
+                avisos.innerText = "As senhas não coincidem.";
+                return;
+            }
+            formData.delete("confirmar-senha");
+            const data = Object.fromEntries(formData.entries());
+            avisos.innerText = "";
 
-  const nextBtn = document.querySelector('.next');
-  const prevBtn = document.querySelector('.prev');
+            const response = await fetch("http://localhost:8080/aluno/register", {
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data)
+            })
 
-  let isTransitioning = false;
-
-  nextBtn.addEventListener('click', () => {
-    if (isTransitioning) return;
-    isTransitioning = true;
-    currentIndex++;
-    slides.style.transition = 'transform 0.5s ease-in-out';
-    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-  });
-
-  prevBtn.addEventListener('click', () => {
-    if (isTransitioning) return;
-    isTransitioning = true;
-    currentIndex--;
-    slides.style.transition = 'transform 0.5s ease-in-out';
-    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-  });
-
-  slides.addEventListener('transitionend', () => {
-    if (currentIndex === totalSlides - 1) {
-      slides.style.transition = 'none';
-      currentIndex = 1;
-      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+            avisos.style.color = "chartreuse";
+            avisos.innerText = "Usuário criado com sucesso!";
+        })
     }
-    if (currentIndex === 0) {
-      slides.style.transition = 'none';
-      currentIndex = totalSlides - 2;
-      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }
-    isTransitioning = false;
-  });
-});
+})
