@@ -17,6 +17,10 @@ router.post("/register", async (req,resp) => {
                 token: token
             });
     } catch (e) {
+        if (e.code == 11000) {
+            console.error("MATRICULA JA REGISTRADA") // isso sera tratado no script
+            return resp.status(409).json({ message: "Matrícula já cadastrada" });
+        }
         console.error("erro ao tentar criar novo aluno: "+ e.message);
         return resp.status(404).json({message: e.message});
     }
@@ -33,11 +37,6 @@ router.post("/login", async (req,resp) => {
             token: token
         });
     } catch(e) {
-
-        if (e.code == 11000) {
-            console.error("MATRICULA JA REGISTRADA") // isso sera tratado no script
-            return resp.status(409).json({ message: "Matrícula já cadastrada" });
-        }
         console.error("erro no login: "+ e.message);
         return resp.status(404).json({message: e.message});
     }

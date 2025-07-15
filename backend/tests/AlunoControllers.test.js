@@ -23,7 +23,7 @@ var alunoTeste = {
     roles: ["ROLE_USER", "ROLE_ALUNO"]
 }
 var alunoTesteCriar = {
-    podeAlmocar: false,
+    podeAlmocar: "sim",
     nome: "testador2",
     sobrenome: "da Silva",
     matricula :"663,4444,1165463666666", 
@@ -63,7 +63,7 @@ describe("Post /aluno/register", () => {
     it("Retorna uma criação mal sucedido - Tentativa de inserir um item duplicado", async () => {
         const resp = await request(app)
             .post("/aluno/register")
-            .send(alunoTeste)
+            .send({...alunoTeste, podeAlmocar: "nao"})
         expect(resp.statusCode).toEqual(409);
         expect(resp.body.message).toEqual("Matrícula já cadastrada");
     });
