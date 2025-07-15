@@ -3,7 +3,7 @@ const chave = (process.env.SECRET_KEY ? process.env.SECRET_KEY: "senha")
 const umDiaEmSecs = 60*60*24;
 const alunoService = require('../../services/usuarios/alunoService')
 const funcionariosService = require('../../services/usuarios/funcionarioServices')
-const bcriptService = require('../../services/seguranca/criptografiaService')
+const bcriptService = require('./criptografiaService')
 
 
 const validar = (...roles) => {

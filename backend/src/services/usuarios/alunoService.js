@@ -1,11 +1,11 @@
 const model = require('../../models/Aluno');
-const bcriptService = require('../seguranca/criptografiaService');
+const bcriptService = require('../../infra/auth/criptografiaService');
 const dbService = require("../../mongo/dbService")
 
 const login = async (senha, mat) => {
     aluno = await dbService.findOneBy({matricula: mat}, model);
-    if(!aluno) throw "Aluno não existe";
-    if(!bcriptService.comparar(senha, aluno.senha)) throw "Senha incorreta";
+    if(!aluno) throw Error("Aluno não existe");
+    if(!bcriptService.comparar(senha, aluno.senha)) throw Error("Senha incorreta");
     return aluno;
 }
 
@@ -17,10 +17,7 @@ const save = async (body) => {
         return aluno;
     } catch (e) {
         console.error("erro alunoService: ", e.message);
-        if (e.code == 11000) {
-            console.error("MATRICULA JA REGISTRADA") // isso sera tratado no script
-            return resp.status(409).json({ message: "Matrícula já cadastrada" });
-        }
+        throw e;
     }
     return aluno;
 };
