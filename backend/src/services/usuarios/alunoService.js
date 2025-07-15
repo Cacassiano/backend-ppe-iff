@@ -15,7 +15,7 @@ const save = async (body) => {
     try{
         aluno = await dbService.save(body, model);
     } catch (e) {
-        return null;
+        throw e;
     }
     return aluno;
 };

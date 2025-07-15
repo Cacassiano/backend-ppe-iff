@@ -3,46 +3,38 @@ const Aluno =  require('../../services/usuarios/alunoService');
 const jwtService = require("../../infra/auth/jwt_service");
 
 router.post("/register", async (req,resp) => {
-    console.log(req.body);
-    if(req.body.matricula != undefined &&
-        req.body.nome != undefined &&
-        req.body.sobrenome != undefined &&
-        req.body.podeAlmocar != undefined &&
-        req.body.senha != undefined
-    ) {
-        senha = req.body.senha;
-        try{
-            aluno = await Aluno.save(req.body);
-            token = jwtService.criarToken(req.body.matricula, aluno.id, senha);
-            return resp.status(201).json({
-                    matricula:req.body.matricula, 
-                    token: token
-                });
-        } catch (e) {
-            console.log("erro ao tentar criar novo aluno");
-            return resp.status(404).json({message: e});
-        }
-    } 
-    return resp.status(400).json({message:"Informações faltando na requisição"});
+    if(!req.body.matricula || !req.body.nome || !req.body.sobrenome || (req.body.podeAlmocar === undefined || req.body.podeAlmocar === null) || !req.body.senha) {
+        return resp.status(400).json({message:"Informações faltando na requisição"});
+    }
+
+    senha = req.body.senha;
+    try{
+        aluno = await Aluno.save(req.body);
+        token = jwtService.criarToken(req.body.matricula, aluno.id, senha);
+        return resp.status(201).json({
+                matricula:req.body.matricula, 
+                token: token
+            });
+    } catch (e) {
+        console.error("erro ao tentar criar novo aluno: "+ e.message);
+        return resp.status(404).json({message: e.message});
+    }
 });
 
 
 router.post("/login", async (req,resp) => {
-    if(req.body.matricula != undefined && req.body.senha != undefined) {
-        try{
-            aluno = await Aluno.login(req.body.senha, req.body.matricula);
-            token = jwtService.criarToken(req.body.matricula ,aluno.id, req.body.senha);
-            return resp.status(200).json({
-                matricula:req.body.matricula,
-                token: token
-            });
-        } catch(e) {
-            console.log("erro no login");
-            return resp.status(404).json({message: e.message});
-        }
-    } 
-    return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
-
+    if(!req.body.matricula || !req.body.senha) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
+    try{
+        aluno = await Aluno.login(req.body.senha, req.body.matricula);
+        token = jwtService.criarToken(req.body.matricula ,aluno.id, req.body.senha);
+        return resp.status(200).json({
+            matricula:req.body.matricula,
+            token: token
+        });
+    } catch(e) {
+        console.log("erro no login: "+ e.message);
+        return resp.status(404).json({message: e.message});
+    }
 });
 
 router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));

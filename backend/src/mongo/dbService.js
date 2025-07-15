@@ -14,14 +14,12 @@ const findOneBy = async(querry, model, populateModel=null, populatePaths = null)
     objeto = await model.findOne(querry);
     if (!objeto) return null
     objeto = (populateModel ? await populateModel.populate(objeto, {path: populatePaths}): objeto);
-    console.log(objeto);
     return objeto;
     
 }
 const deleteOneBy = async (querry, model) => {
     let object;
     object = await model.deleteOne(querry);
-    console.log(object);
     if(!object) throw new Error("Nenhum item foi deletado");
     return object
 }

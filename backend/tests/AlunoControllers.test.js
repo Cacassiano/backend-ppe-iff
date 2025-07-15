@@ -19,7 +19,7 @@ var alunoTeste = {
     nome: "testador",
     sobrenome: "da Silva",
     matricula :"663,56416414654885,1165463666666", 
-    senha: "asdfaeeeadsfafffeadfaggadfesdasdasdfdffffsff",
+    senha: "testadorSenha",
     roles: ["ROLE_USER", "ROLE_ALUNO"]
 }
 var alunoTesteCriar = {
@@ -27,29 +27,46 @@ var alunoTesteCriar = {
     nome: "testador2",
     sobrenome: "da Silva",
     matricula :"663,4444,1165463666666", 
-    senha: "JohnMarshtonLowHonor123456"
+    senha:"testesenha"
 }
 
 afterAll(async () => {
     await alunoModel.deleteOne({matricula: alunoTeste.matricula});
     await alunoModel.deleteOne({matricula: alunoTesteCriar.matricula});
-})
+});
+
 beforeAll(async () => {
     await db();
     nSenha = bcript.criptografar(alunoTeste.senha);
     temp = {...alunoTeste, senha: nSenha};
     await new alunoModel(temp).save();
-})
+});
 
 describe("Post /aluno/register", () => {
     it("Retorna uma criação bem sucedida", async () =>{
         const resp = await request(app)
             .post("/aluno/register")
-            .send(alunoTesteCriar);
+            .send({...alunoTesteCriar, senha: "hjhfsadkjfhksd"});
         expect(resp.statusCode).toEqual(201);
         expect(resp.body).toHaveProperty('token');
         expect(resp.body.matricula).toEqual(alunoTesteCriar.matricula);
     })
+
+    it("Retorna uma criação mal sucedido - informações faltando", async () => {
+        const resp = await request(app)
+            .post("/aluno/register")
+            .send({...alunoTesteCriar, senha: null})
+        expect(resp.statusCode).toEqual(400);
+        expect(resp.body.message).toEqual("Informações faltando na requisição")
+    });
+
+    it("Retorna uma criação mal sucedido - Tentativa de inserir um item duplicado", async () => {
+        const resp = await request(app)
+            .post("/aluno/register")
+            .send(alunoTeste)
+        expect(resp.statusCode).toEqual(404);
+        expect(resp.body.message).toMatch("duplicate key error");
+    });
 })
 
 
@@ -58,7 +75,6 @@ describe("Post /aluno/login", () => {
         const resp = await request(app)
             .post("/aluno/login")
             .send({matricula: alunoTeste.matricula, senha: alunoTeste.senha});
-        console.log(resp.body);
         expect(resp.statusCode).toEqual(200);
         expect(resp.body).toHaveProperty('token');
         expect(resp.body.matricula).toEqual(alunoTeste.matricula);
