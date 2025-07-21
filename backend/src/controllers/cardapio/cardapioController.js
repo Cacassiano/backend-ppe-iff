@@ -2,10 +2,10 @@ const router = require('express').Router();
 const service = require('../../services/cardapio/cardapioService')
 const tkservice = require('../../infra/auth/jwt_service')
 
-router.get("/hoje", async (req,resp) =>{
+router.get("/:dia", async (req,resp) =>{
     let cardapio;
     try{
-        cardapio = await service.getCardapioByData(new Date(Date.now()));
+        cardapio = await service.getCardapioByData(new Date(req.params.dia == "hoje" ? Date.now(): req.params.dia));
         return resp.status(200).json({
             cardapio: cardapio
         });
@@ -28,7 +28,7 @@ router.post("/criar", async(req, resp) => {
     console.log(req.body);
     if(!req.body.data || !req.body.refeicoes) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
     try{
-        cardapio = await service.createCardapio(new Date(req.body.data), req.body.refeicoes);
+        cardapio = await service.createCardapio(new Date(req.body.data).toISOString().split("T")[0], req.body.refeicoes);
         return resp.status(201).json({
             cardapio:cardapio
         });

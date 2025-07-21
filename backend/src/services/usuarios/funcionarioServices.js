@@ -15,8 +15,8 @@ const save = async (body, roles) => {
 
 const login = async (senha, identificador) => {
     try{
-        func = await model.findOne({email: identificador});
-        if(!bcript.comparar(senha, func.senha)) throw Error("Senha invalida");
+        func = await dbService.findOneBy({email: identificador}, model);
+        if(!bcript.comparar(senha, func.senha)) throw Error("Senha incorreta");
         return func;
     }catch(e) {
         console.error(`ocorreu um erro no FuncionarioService(login): ${e}`);

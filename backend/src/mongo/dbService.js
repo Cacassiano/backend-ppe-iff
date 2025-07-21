@@ -3,7 +3,7 @@ const save = async (data, model) => {
     try{
         objeto = await objeto.save();
     } catch(e){
-        console.log(`Erro ao criar novo model no db com os dados: \n ${data} \n`);
+        console.log(`Erro ao criar novo model no db com os dados enviados\n`);
         throw e;
     }
     return objeto;
@@ -11,14 +11,14 @@ const save = async (data, model) => {
 
 const findOneBy = async(querry, model, populateModel=null, populatePaths = null) => {
     objeto = await model.findOne(querry);
-    if (!objeto) throw new Error(`Não foi possível encontrar um objeto com as características ${querry}`);
+    if (!objeto) throw new Error(`Não foi possível encontrar um objeto com as características dadas`);
     objeto = (populateModel ? await populateModel.populate(objeto, {path: populatePaths}): objeto);
     return objeto;
     
 }
 const deleteOneBy = async (querry, model) => {
     object = await model.deleteOne(querry);
-    if(!object) throw new Error(`Nenhum item foi deletado querry: ${querry}`);
+    if(!object) throw new Error(`Nenhum item foi deletado`);
     return object
 }
 

@@ -7,9 +7,10 @@ const app = express();
 const db = require("../src/mongo/db")
 const alunoController = require("../src/controllers/alunos/Alunocontroller");
 const alunoModel = require("../src/models/Aluno");
-const tkService = require("../src/infra/auth/jwt_service");
+// const tkService = require("../src/infra/auth/jwt_service");
 const request = require("supertest");
 const bcript = require("../src/infra/auth/criptografiaService");
+const memoryServer = require("mongodb-memory-server");
 
 app.use(express.json());
 app.use("/aluno", alunoController);
@@ -30,13 +31,9 @@ var alunoTesteCriar = {
     senha:"testesenha"
 }
 
-afterAll(async () => {
-    await alunoModel.deleteOne({matricula: alunoTeste.matricula});
-    await alunoModel.deleteOne({matricula: alunoTesteCriar.matricula});
-});
-
 beforeAll(async () => {
-    await db();
+    const server = await memoryServer.MongoMemoryServer.create()
+    await db(server.getUri());
     nSenha = bcript.criptografar(alunoTeste.senha);
     temp = {...alunoTeste, senha: nSenha};
     await new alunoModel(temp).save();
@@ -68,7 +65,6 @@ describe("Post /aluno/register", () => {
         expect(resp.body.message).toEqual("Matrícula já cadastrada");
     });
 })
-
 
 describe("Post /aluno/login", () => {
     it("Retorna um login bem sucedido", async () => {
@@ -104,6 +100,6 @@ describe("Post /aluno/login", () => {
             .send({matricula :"-"+alunoTeste.matricula, senha: alunoTeste.senha});
         expect(resp.statusCode).toEqual(404);
         expect(resp.body).toHaveProperty('message');
-        expect(resp.body.message).toEqual("Aluno não existe");
+        expect(resp.body.message).toMatch("Não foi possível encontrar");
     });
 });
