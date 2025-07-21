@@ -5,9 +5,12 @@ const dbService = require("../../mongo/dbService")
 const getCardapioByData = async (data) => {
     [data,] = data.toISOString().split("T");
     console.log(data)
-    cardapio = await dbService.findOneBy({ dia: new Date(data) }, modelCard, modelRef, ['almoco', 'lanche', 'jantar', 'cafe'])
-    if (!cardapio) throw "Cardapio não encontrado"
-    return cardapio;
+    try{    
+        let cardapio = await dbService.findOneBy({ dia: new Date(data) }, modelCard, modelRef, ['almoco', 'lanche', 'jantar', 'cafe'])
+        return cardapio;
+    } catch(e) {
+        throw new Error("Cardapio não encontrado");
+    }
 }
 
 const createCardapio = async (dia, refeicoes) => {
@@ -20,15 +23,17 @@ const createCardapio = async (dia, refeicoes) => {
         cafe: [],
         lanche: [],
     };
-    /*
-        Possivel ajuste futuro: caso criar cardapio der errado, 
-        apagar todos as refeicoes criadas no banco,
-        para economizar espaço desnecessario
-    */
-    cardapio = await addRefeicoes(cardapio, refeicoes)
-    cardapio = await dbService.save(cardapio, modelCard)
-    if (!cardapio) throw new Error("Não foi possivel salvar o cardapio");
-    return cardapio;
+    try{
+        cardapio = await addRefeicoes(cardapio, refeicoes);
+        cardapio = await dbService.save(cardapio, modelCard);
+        return cardapio;
+    } catch(e) {
+        console.error(`Erro na parte de crir cardapio: ${e}`);
+        rmRefeicoes(cardapio, refeicoes);
+        throw e;
+    }
+    
+    
 }
 
 const addRefeicoes = async (cardapio, refeicoes) => {
@@ -99,7 +104,7 @@ const refeicao_ops = async (body, id_cardapio) => {
     if (body.add != undefined) cardapio = await addRefeicoes(cardapio, body.add);
     if (body.rm != undefined) cardapio = await rmRefeicoes(cardapio, body.rm);
     if (body.upd != undefined) cardapio = await updRefeicoes(cardapio, body.upd);
-    dbService.save(cardapio, modelCard);
+    return await dbService.save(cardapio, modelCard);
 }
 
 module.exports = {

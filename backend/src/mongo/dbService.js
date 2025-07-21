@@ -10,17 +10,15 @@ const save = async (data, model) => {
 }
 
 const findOneBy = async(querry, model, populateModel=null, populatePaths = null) => {
-    let objeto;
     objeto = await model.findOne(querry);
-    if (!objeto) return null
+    if (!objeto) throw new Error(`Não foi possível encontrar um objeto com as características ${querry}`);
     objeto = (populateModel ? await populateModel.populate(objeto, {path: populatePaths}): objeto);
     return objeto;
     
 }
 const deleteOneBy = async (querry, model) => {
-    let object;
     object = await model.deleteOne(querry);
-    if(!object) throw new Error("Nenhum item foi deletado");
+    if(!object) throw new Error(`Nenhum item foi deletado querry: ${querry}`);
     return object
 }
 

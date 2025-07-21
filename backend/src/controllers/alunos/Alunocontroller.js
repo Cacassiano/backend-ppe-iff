@@ -37,18 +37,18 @@ router.post("/login", async (req,resp) => {
             token: token
         });
     } catch(e) {
-        console.error("erro no login: "+ e.message);
         return resp.status(404).json({message: e.message});
     }
 });
 
 router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));
-
 router.get("/detalhes", async (req,resp) => {
-    aluno = await Aluno.getById(req.user.id);
-    if(!aluno) return resp.status(404).json({message: "aluno não existe"});
-    console.log(aluno);
-    resp.status(200).json(aluno);
+    try {
+        aluno = await Aluno.getById(req.user.id);
+        return resp.status(200).json(aluno);
+    } catch(e) {
+        return resp.status(404).json({message: e.message});
+    }
 })
 
 module.exports = router;

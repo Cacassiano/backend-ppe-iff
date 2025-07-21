@@ -8,21 +8,30 @@ const save = async (body, roles) => {
     try{
         return await dbService.save(body, model);
     } catch (e) {
-        return null;
+        console.error(`ocorreu um erro no FuncionarioService(save): ${e}`)
+        throw e;
     }
 };
 
 const login = async (senha, identificador) => {
-    func = await model.findOne({email: identificador});
-    if(func) {
+    try{
+        func = await model.findOne({email: identificador});
+        if(!bcript.comparar(senha, func.senha)) throw Error("Senha invalida");
         return func;
+    }catch(e) {
+        console.error(`ocorreu um erro no FuncionarioService(login): ${e}`);
+        throw e;
     }
-    return false;
 };
 
 const getById = async (id) => {
-    func = await model.findById(id);
-    return func
+    try{
+        func = await model.findById(id);
+        return func
+    } catch(e) {
+        throw new Error("Funcionario não encontrado");
+    }
+    
 }
 
 module.exports = {

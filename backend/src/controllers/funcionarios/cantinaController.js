@@ -4,16 +4,15 @@ const tkservice = require('../../infra/auth/jwt_service');
 
 router.post("/login", async (req,resp) => {
     if(req.body.email != undefined && req.body.senha != undefined) {
-        func = await Funcionario.login(req.body.senha, req.body.email)
-        console.log(func)
-        if (func) {
+        try{
+            func = await Funcionario.login(req.body.senha, req.body.email)
             token = tkservice.criarToken(req.body.email, func.id, req.body.senha);
             resp.status(200).json({
                 token: token,
                 email: req.body.email
             })
-        } else {
-            resp.status(403).json({message: "erro login"});
+        } catch(e) {
+            return resp.status(404).json({message: e.message});
         }
     } else {
         resp.status(400).json({message: "erro login"});
@@ -27,16 +26,17 @@ router.post("/register", async (req,resp) => {
         req.body.sobrenome != undefined &&
         req.body.senha != undefined
     ) {
-        senha = req.body.senha;
-        func = await Funcionario.save(req.body, ["ROLE_CANTINA"]);
-        if(func == null) {
-            return resp.status(500).json({mssage: "erro ao criar novo usuario"});
-        }
-        token = tkservice.criarToken(req.body.email, func.id, senha);
-        resp.status(201).json({
-            token: token,
-            email: req.body.email
-        })
+        try{
+            senha = req.body.senha;
+            func = await Funcionario.save(req.body, ["ROLE_CANTINA"]);
+            token = tkservice.criarToken(req.body.email, func.id, senha);
+            resp.status(201).json({
+                token: token,
+                email: req.body.email
+            })
+        } catch(e) {
+            return resp.status(409).json({message: e.message});
+        }  
     }else {
         resp.status(400).json({message: "requisicao invalida, campos faltando"});
     }
