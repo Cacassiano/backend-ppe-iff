@@ -4,8 +4,8 @@
   "description": "Backend de uma aplicacao de cardapio para o iff quissamã",
   "main": "app.js",
   "scripts": {
-    "test": "jest",
-    "start": "npx nodemon app.js"
+    "test": "jest --runInBand --detectOpenHandles",
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "jest": "^30.0.4",
+    "mongodb-memory-server": "^10.1.4",
     "supertest": "^7.1.3"
   }
 }
