@@ -5,17 +5,19 @@ require('dotenv').config({
 const express = require("express");
 const app = express();
 const db = require("../src/mongo/db")
+const mongoose = require("mongoose")
 const alunoController = require("../src/controllers/alunos/Alunocontroller");
 const alunoModel = require("../src/models/Aluno");
 // const tkService = require("../src/infra/auth/jwt_service");
 const request = require("supertest");
 const bcript = require("../src/infra/auth/criptografiaService");
 const memoryServer = require("mongodb-memory-server");
+var server;
 
 app.use(express.json());
 app.use("/aluno", alunoController);
 
-var alunoTeste = {
+const alunoTeste = {
     podeAlmocar: false,
     nome: "testador",
     sobrenome: "da Silva",
@@ -23,7 +25,7 @@ var alunoTeste = {
     senha: "testadorSenha",
     roles: ["ROLE_USER", "ROLE_ALUNO"]
 }
-var alunoTesteCriar = {
+const alunoTesteCriar = {
     podeAlmocar: "sim",
     nome: "testador2",
     sobrenome: "da Silva",
@@ -32,11 +34,15 @@ var alunoTesteCriar = {
 }
 
 beforeAll(async () => {
-    const server = await memoryServer.MongoMemoryServer.create()
+    server = await memoryServer.MongoMemoryServer.create();
     await db(server.getUri());
     nSenha = bcript.criptografar(alunoTeste.senha);
     temp = {...alunoTeste, senha: nSenha};
     await new alunoModel(temp).save();
+}, 10000);
+afterAll(async () => {
+    await mongoose.disconnect();
+    await server.stop(); 
 });
 
 describe("Post /aluno/register", () => {

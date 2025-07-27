@@ -7,10 +7,12 @@ const app = express();
 const db = require("../src/mongo/db")
 const funcionarioController = require("../src/controllers/funcionarios/cantinaController");
 const funcionarioModel = require("../src/models/Funcionario");
+const mongoose = require("mongoose");
 const tkService = require("../src/infra/auth/jwt_service");
 const request = require("supertest");
 const bcript = require("../src/infra/auth/criptografiaService");
 const memoryServer = require("mongodb-memory-server");
+var server;
 
 app.use(express.json());
 app.use("/funcionarios/cantina", funcionarioController);
@@ -30,11 +32,16 @@ var funcionarioTesteCriar = {
     senha: "novaSenha123"
 }
 beforeAll(async () => {
-    const server = await memoryServer.MongoMemoryServer.create()
+    server = await memoryServer.MongoMemoryServer.create();
     await db(server.getUri());
     nSenha = bcript.criptografar(funcionarioTeste.senha);
     temp = {...funcionarioTeste, senha: nSenha};
     await new funcionarioModel(temp).save();
+}, 10000);
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await server.stop(); 
 });
 
 describe("Post /funcionarios/cantina/register", () => {

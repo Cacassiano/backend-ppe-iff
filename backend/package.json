@@ -4,7 +4,7 @@
   "description": "Backend de uma aplicacao de cardapio para o iff quissamã",
   "main": "app.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand --detectOpenHandles",
     "start": "nodemon app.js"
   },
   "repository": {

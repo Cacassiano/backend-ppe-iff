@@ -12,9 +12,15 @@ const save = async (data, model) => {
 const findOneBy = async(querry, model, populateModel=null, populatePaths = null) => {
     objeto = await model.findOne(querry);
     if (!objeto) throw new Error(`Não foi possível encontrar um objeto com as características dadas`);
-    objeto = (populateModel ? await populateModel.populate(objeto, {path: populatePaths}): objeto);
+    objeto = (populateModel ? await populateThis(populateModel, populatePaths): objeto);
     return objeto;
-    
+}
+const populateThis = async( populateModel,objeto,populatePaths) => {
+    try{
+        return await populateModel.populate(objeto, {path: populatePaths})
+    }catch(e){
+        return objeto;
+    }
 }
 const deleteOneBy = async (querry, model) => {
     object = await model.deleteOne(querry);
@@ -26,4 +32,5 @@ module.exports = {
     save,
     findOneBy,
     deleteOneBy,
+    populateThis,
 }

@@ -13,10 +13,14 @@ const memoryServer = require("mongodb-memory-server");
 const cardapioService = require("../src/services/cardapio/cardapioService");
 const refeicaoModel = require("../src/models/Refeicao");
 const validar = require("../src/infra/auth/jwt_service").validar
-jest.mock("../src/infra/auth//jwt_service", () => ({
-    validar: jest.fn(),
+var server;
+let cardapioId;
+jest.mock("../src/infra/auth/jwt_service", () => ({
+    validar: jest.fn((...roles) => (req, resp, next) => next()),
 }))
-validar()
+
+
+app.use(express.json());
 app.use("/cardapio", cardapioController);
 
 test("retorna true", ()=>{
@@ -30,6 +34,7 @@ var cardapio1 = {
     lanche: [],
     jantar: []
 };
+var operacoes;
 const refsCard1 = [
     {
         tipo_refeicao: "jantar",
@@ -63,37 +68,89 @@ const refsCard1 = [
     }
 ]
 
-// const cardapio0 = {
-//     dia: new Date("1999-01-01")
-// }
-// const cardapio2 = {
-//     dia: new Date(Date.now()),
-//     almoco: [
-//         {
-//             tipo_refeicao: "Almoço",
-//             comida: "Arroz branco, feijão tropeiro, bife acebolado, farofa",
-//             bebida: "Refrigerante (opcional)"
-//         }
-//     ],
-//     cafe: [
-//         {
-//             tipo_refeicao: "Café",
-//             comida: "Tapioca com queijo coalho e mel",
-//             bebida: "Café com leite"
-//         }
-//     ]
-// };
-
 beforeAll(async () => {
-    const server = await memoryServer.MongoMemoryServer.create()
+    server = await memoryServer.MongoMemoryServer.create();
     await db(server.getUri());
-    for(i = 0; i<refsCard1.length; i++) {
-        ref = await refeicaoModel.create(refsCard1[i]);
-        cardapio1[ref.tipo_refeicao].push(ref._id);
-    }
     cardapio1 = await cardapioService.createCardapio(new Date(new Date(Date.now()).toISOString().split("T")[0]), refsCard1);
-    // await cardapioService.createCardapio(cardapio0, refsCard1);
+    cardapioId = cardapio1._id;
+    operacoes = {
+        add: [
+            {
+                tipo_refeicao: "almoco",
+                comida: "Nova comida adicionada",
+                bebida: "Nova bebida adicionada"
+            }
+        ],
+        rm: [
+            {  
+                tipo_refeicao: "almoco",
+                comida: "Arroz integral, feijão, filé de frango grelhado, salada de folhas",
+                bebida: "Água aromatizada com limão"
+            }
+        ], 
+        upd: [
+            {
+                _id: cardapio1.almoco[1]._id,
+                tipo_refeicao: "lanche",
+                comida: "Comida atualizada",
+                bebida: "Bebida atualizada"
+            }
+        ]
+    }
 });
+afterAll(async () => {
+    await mongoose.disconnect();
+    await server.stop(); 
+});
+
+// describe("POST /cardapio/:id_cardapio/operacoes-refeicao", () => {
+//     it("Deve realizar operações de adição, remoção e atualização com sucesso", async () => {
+//         const response = await request(app)
+//             .post(`/cardapio/${cardapioId}/operacoes-refeicao`)
+//             .send(operacoes);
+
+//         expect(response.statusCode).toBe(200);
+//         expect(response.body.message).toBe("Todas as operações foram realizadas");
+//         expect(response.body.cardapio).toBeDefined();
+        
+//         // Verifica se as operações foram aplicadas corretamente
+//         const cardapioAtualizado = await cardapioModel.findById(cardapioId);
+//         console.log(cardapioAtualizado);
+//         expect(cardapioAtualizado.almoco.length).toBe(2); 
+//         expect(cardapioAtualizado.lanche.length).toBe(2); 
+//     });
+
+//     it("Deve retornar erro 400 quando nenhuma operação é informada", async () => {
+//         const response = await request(app)
+//             .post(`/cardapio/${cardapioId}/operacoes-refeicao`)
+//             .send({}); 
+
+//         expect(response.statusCode).toBe(400);
+//         expect(response.body.message).toBe("Informações requeridas nao informadas");
+//     });
+
+//     it("Deve retornar erro 500 quando o cardápio não existe", async () => {
+//         const operacoes = {
+//             add: [
+//                 {
+//                     tipo_refeicao: "almoco",
+//                     comida: "Nova comida",
+//                     bebida: "Nova bebida"
+//                 }
+//             ]
+//         };
+
+//         const idInexistente = new mongoose.Types.ObjectId(); // Gera um ID que não existe
+
+//         const response = await request(app)
+//             .post(`/cardapio/${idInexistente}/operacoes-refeicao`)
+//             .send(operacoes);
+
+//         expect(response.statusCode).toBe(500);
+//         expect(response.body.message).toBe("Ocorreu um erro ao tentar fazer as operações");
+//         expect(response.body.erro).toContain("Cardapio não encontrado");
+//     });
+// });
 
 describe("testa /cardapio/hoje", () => {
     it("Faz um get bem sucedido", async () => {
@@ -102,8 +159,10 @@ describe("testa /cardapio/hoje", () => {
             .send();
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty("cardapio");
-        temp = response.body.cardapio
+        console.log(response.body);
 
+        temp = response.body.cardapio
+        
         expect(temp.dia).toBe(new Date(new Date(Date.now()).toISOString().split("T")[0]).toISOString());
 
         expect(temp.almoco.length).toEqual(2);
@@ -136,11 +195,13 @@ describe("testa /cardapio/hoje", () => {
     })
 })
 
+
 describe("Post /cardapio/criar", () => {
     it("Consegue criar o cardapio", async() => {
         const resp = await request(app)
             .post("/cardapio/criar")
-            .send({data:"1999-01-01", refsCard1})
+            .set("Content-type", "application/json")
+            .send({data:"1999-01-01", refeicoes: refsCard1})
         
         expect(resp.statusCode).toBe(201);
         expect(resp.body).toHaveProperty("cardapio")
@@ -173,4 +234,13 @@ describe("Post /cardapio/criar", () => {
             expect(tempCardCriado.lanche[i]).toMatchObject(tempCardEncontrado.lanche[i]); 
         }
     }, 10000)
+
+    it("Não consegue criar o cardapio - Informações faltando", async() => {
+        const resp = await request(app)
+            .post("/cardapio/criar")
+            .send({data: Date.now()})
+        expect(resp.statusCode).toBe(400);
+        expect(resp.body.message).toBe("Informações requeridas não foram enviadas");
+    });
 })
+

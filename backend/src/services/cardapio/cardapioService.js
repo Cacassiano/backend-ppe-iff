@@ -4,7 +4,6 @@ const dbService = require("../../mongo/dbService")
 
 const getCardapioByData = async (data) => {
     [data,] = data.toISOString().split("T");
-    console.log(data)
     try{    
         cardapio = await dbService.findOneBy({ dia: new Date(data) }, modelCard, modelRef, ['almoco', 'lanche', 'jantar', 'cafe'])
         return cardapio;
@@ -46,10 +45,7 @@ const addRefeicoes = async (cardapio, refeicoes) => {
 }
 function findIndexRefeicao(ref, cardapio) {
     for (i = 0; i < cardapio[ref.tipo_refeicao].length; i++) {
-        if (ref.tipo_refeicao === cardapio[ref.tipo_refeicao][i].tipo_refeicao &&
-            ref.bebida === cardapio[ref.tipo_refeicao][i].bebida &&
-            ref.comida === cardapio[ref.tipo_refeicao][i].comida
-        ) {
+        if (ref.bebida === cardapio[ref.tipo_refeicao][i].bebida && ref.comida === cardapio[ref.tipo_refeicao][i].comida) {
             return i;
         }
     }
@@ -57,13 +53,15 @@ function findIndexRefeicao(ref, cardapio) {
 }
 
 const rmRefeicoes = async (cardapio, refeicoes) => {
-    for (i = 0; i < refeicoes.length; i++) {
+    cardapio = await dbService.populateThis(modelRef, cardapio,['almoco', 'lanche', 'jantar', 'cafe']);
+    for (let i = 0; i < refeicoes.length; i++) {
         try {
             index = findIndexRefeicao(refeicoes[i], cardapio);
             console.log(index);
             await dbService.deleteOneBy({ _id: cardapio[refeicoes[i].tipo_refeicao][index]._id }, modelRef);
             cardapio[refeicoes[i].tipo_refeicao].splice(index, 1);
         } catch (e) {
+            console.error(e)
             continue;
         }
     }
@@ -71,13 +69,13 @@ const rmRefeicoes = async (cardapio, refeicoes) => {
 }
 /* Em desenvolvimento */
 const updRefeicoes = async (cardapio, refeicoes) => {
-    for (i = 0; i < refeicoes.length; i++) {
+    cardapio = await dbService.populateThis(modelRef, cardapio,['almoco', 'lanche', 'jantar', 'cafe']);
+    for (let i = 0; i < refeicoes.length; i++) {
         refeicao = await dbService.findOneBy({_id: refeicoes[i]._id}, modelRef);
         tipo_ref_antigo = refeicao.tipo_refeicao;
         // Tiro ref do cardapio
         index = findIndexRefeicao(refeicao, cardapio);
         cardapio[refeicao.tipo_refeicao].splice(index, 1);
-        
         // atualizo a refeicao
         refeicao.tipo_refeicao = refeicoes[i].tipo_refeicao;
         refeicao.comida = refeicoes[i].comida;
@@ -97,8 +95,9 @@ const updRefeicoes = async (cardapio, refeicoes) => {
 }
 
 const refeicao_ops = async (body, id_cardapio) => {
-    cardapio = await dbService.findOneBy({ _id: id_cardapio }, modelCard, modelRef, ['almoco', 'lanche', 'jantar', 'cafe']);
-    console.log(body)
+    try{ cardapio = await dbService.findOneBy({ _id: id_cardapio }, modelCard); } 
+    catch(e){ throw new Error("Cardapio não encontrado"); }
+
     if (cardapio == null) throw Error("Cardapio não existe");
     if (body.add != undefined) cardapio = await addRefeicoes(cardapio, body.add);
     if (body.rm != undefined) cardapio = await rmRefeicoes(cardapio, body.rm);

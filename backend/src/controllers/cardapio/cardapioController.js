@@ -25,14 +25,14 @@ router.get("/:dia", async (req,resp) =>{
 
 router.use("/criar", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
 router.post("/criar", async(req, resp) => {
-    console.log(req.body);
-    if(!req.body.data || !req.body.refeicoes) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
+    if(!req.body || !req.body.data || !req.body.refeicoes) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
     try{
         cardapio = await service.createCardapio(new Date(req.body.data).toISOString().split("T")[0], req.body.refeicoes);
         return resp.status(201).json({
             cardapio:cardapio
         });
     } catch(e) {
+        console.error("criar cardapio falhou: " + e);
         return resp.status(500).json({
             message: "Erro ao tentar criar cardapio",
             erro: e.message
@@ -42,7 +42,7 @@ router.post("/criar", async(req, resp) => {
 
 
 router.post("/:id_cardapio/operacoes-refeicao", async (req, resp) => {
-    if(!req.body.add && !req.body.rm && !req.body.upd) return resp.status(400).json({message: "Informações requeridas nao informadas"});
+    if((!req.body.add && !req.body.rm && !req.body.upd) || !req.params.id_cardapio) return resp.status(400).json({message: "Informações requeridas nao informadas"});
     try{
         new_cardapio = await service.refeicao_ops(req.body, req.params.id_cardapio);
         return resp.status(200).json({
@@ -50,6 +50,7 @@ router.post("/:id_cardapio/operacoes-refeicao", async (req, resp) => {
             cardapio: new_cardapio
         })
     } catch(e) {
+        console.error(e);
         return resp.status(500).json({
             message: "Ocorreu um erro ao tentar fazer as operações", 
             erro: e.message
