@@ -12,13 +12,14 @@ const cardapioController = require("./src/controllers/cardapio/cardapioControlle
 const tkservice = require('./src/infra/auth/jwt_service');
 const bodyParser = require('body-parser');
 const db = require("./src/mongo/db");
+const memoryServer = require("mongodb-memory-server");
+
 const port = 8080;
 
 (async () => {
     
     server = await memoryServer.MongoMemoryServer.create();
-    await db(server.getUri());
-    await db(); // conecta ao Mongo antes de tudo
+    await db(server.getUri()); // conecta ao Mongo antes de tudo
 
     // Middlewares e rotas
     app.use(cors());
