@@ -1,0 +1,179 @@
+html, body{
+    height: 100vh;
+    margin: 0;
+    background-color: #dad2c1;
+    overflow: hidden;
+}
+h1, h2, p, a{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+#topo img{
+    margin-left: 20px;
+    max-width: 100%;
+    border-radius: 30px;
+}
+#tudo {
+    display: flex;
+}
+#topo{
+    height: 50px;
+    display: flex;
+    background-color: #004f35;
+    z-index: 2;
+    padding: 5px 15px;
+    gap: 10px;
+    justify-content: space-between;
+}
+.mobile{
+    display: none;
+}
+.pc{
+    display:block;
+}
+#loginDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #011b14;
+    margin-left: auto;
+    height: 100vh;
+    width: 50vw;
+    flex-direction: column;
+}
+#loginDiv h1{
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    margin: 0;
+    font-size: 56px;
+}
+#loginDiv h2{
+    text-align: center;
+    color: white;
+    margin-top: 0px;
+    font-size: 36px;
+    padding-bottom: 20px;
+}
+
+#servicosDiv{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#tituloServicos{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    margin: 20px 0;
+    font-size: 56px;
+    padding-bottom: 50px;
+}
+
+#servicosContainer {
+    width: 50vw;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.imgLink{
+    transform: scale(1);
+    transition: transform 250ms ease-in-out;
+    width: 250px;
+    min-height: 15vh;
+    min-width: 13vw;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.imgLink:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+#loginForm{
+    align-items: center;
+    display: flex;
+    padding: 36 0 0 10%;
+    flex-direction: column;
+    width: 50%;
+    margin-bottom: 30%;
+}
+.inputLogin{
+    padding: 6px;
+    border-radius: 15px;
+    font-size: 24px;
+    width: 70%;
+    margin-bottom: 10px;
+    border: 3px solid #000a08;
+    transform: scale(1);
+    transition: all 250ms ease-in-out;
+}
+.inputLogin:focus{
+    transform: scale(1.1);
+    outline: none;
+    border: #004f35 7px solid;
+}
+
+
+#loginButton{
+    margin-top: 15;
+    padding: 10px 70px;
+    border: 3px solid #000a08;
+    font-size: 24px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 250ms ease-in-out;
+}
+#registerLink{
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
+#loginButton:hover{
+    color: white;
+    cursor: pointer;
+    background-color: darkgreen;
+    transform: scale(1.05);
+}
+@media (max-width: 600px){
+    html, body{
+        overflow: scroll;
+    }
+    .imgLink{
+        
+        min-width: 60vw;
+    }
+    #tudo{
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+    #topo img{
+        margin-left: 15px;
+    }
+    .mobile{
+        display: flex;
+    }
+    .pc{
+        display: none;
+    }
+    #loginForm{
+        padding-left: 30px;
+        width: 85%;
+    }
+    #loginForm input{
+        font-size: 24px;
+    }
+    #loginDiv{
+        background-color: #00140f;
+        width: 90vw;
+        height: 85vh;
+        margin: 20px 50px 0 50px;
+        border-radius: 25px;
+    }
+}
