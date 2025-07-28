@@ -12,6 +12,13 @@ h1, h2, p, a{
     max-width: 100%;
     border-radius: 30px;
 }
+#cardapio{
+    background-color: black;
+    width: 65vw;
+    height: 80vh;
+    align-items: center;
+    margin: auto;
+}
 #tudo {
     display: flex;
 }
