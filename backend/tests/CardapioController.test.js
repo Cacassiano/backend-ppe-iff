@@ -79,14 +79,15 @@ beforeAll(async () => {
                 tipo_refeicao: "almoco",
                 comida: "Nova comida adicionada",
                 bebida: "Nova bebida adicionada"
+            },
+            {
+                tipo_refeicao: "almoco",
+                comida: "Nova2 comida adicionada",
+                bebida: "Nova2 bebida adicionada"
             }
         ],
         rm: [
-            {  
-                tipo_refeicao: "almoco",
-                comida: "Arroz integral, feijão, filé de frango grelhado, salada de folhas",
-                bebida: "Água aromatizada com limão"
-            }
+            cardapio1.almoco[0]._id
         ], 
         upd: [
             {
@@ -103,54 +104,54 @@ afterAll(async () => {
     await server.stop(); 
 });
 
-// describe("POST /cardapio/:id_cardapio/operacoes-refeicao", () => {
-//     it("Deve realizar operações de adição, remoção e atualização com sucesso", async () => {
-//         const response = await request(app)
-//             .post(`/cardapio/${cardapioId}/operacoes-refeicao`)
-//             .send(operacoes);
+describe("POST /cardapio/:id_cardapio/operacoes-refeicao", () => {
+    it("Deve realizar operações de adição, remoção e atualização com sucesso", async () => {
+        const response = await request(app)
+            .post(`/cardapio/${cardapioId}/operacoes-refeicao`)
+            .send(operacoes);
 
-//         expect(response.statusCode).toBe(200);
-//         expect(response.body.message).toBe("Todas as operações foram realizadas");
-//         expect(response.body.cardapio).toBeDefined();
+        expect(response.body.message).toBe("Todas as operações foram realizadas");
+        expect(response.statusCode).toBe(200);
+        expect(response.body.cardapio).toBeDefined();
         
-//         // Verifica se as operações foram aplicadas corretamente
-//         const cardapioAtualizado = await cardapioModel.findById(cardapioId);
-//         console.log(cardapioAtualizado);
-//         expect(cardapioAtualizado.almoco.length).toBe(2); 
-//         expect(cardapioAtualizado.lanche.length).toBe(2); 
-//     });
+        // Verifica se as operações foram aplicadas corretamente
+        const cardapioAtualizado = await cardapioModel.findById(cardapioId);
+        console.log(cardapioAtualizado);
+        expect(cardapioAtualizado.almoco.length).toBe(2); 
+        expect(cardapioAtualizado.lanche.length).toBe(2); 
+    });
 
-//     it("Deve retornar erro 400 quando nenhuma operação é informada", async () => {
-//         const response = await request(app)
-//             .post(`/cardapio/${cardapioId}/operacoes-refeicao`)
-//             .send({}); 
+    it("Deve retornar erro 400 quando nenhuma operação é informada", async () => {
+        const response = await request(app)
+            .post(`/cardapio/${cardapioId}/operacoes-refeicao`)
+            .send({}); 
 
-//         expect(response.statusCode).toBe(400);
-//         expect(response.body.message).toBe("Informações requeridas nao informadas");
-//     });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message).toBe("Informações requeridas nao informadas");
+    });
 
-//     it("Deve retornar erro 500 quando o cardápio não existe", async () => {
-//         const operacoes = {
-//             add: [
-//                 {
-//                     tipo_refeicao: "almoco",
-//                     comida: "Nova comida",
-//                     bebida: "Nova bebida"
-//                 }
-//             ]
-//         };
+    it("Deve retornar erro 500 quando o cardápio não existe", async () => {
+        const operacoes = {
+            add: [
+                {
+                    tipo_refeicao: "almoco",
+                    comida: "Nova comida",
+                    bebida: "Nova bebida"
+                }
+            ]
+        };
 
-//         const idInexistente = new mongoose.Types.ObjectId(); // Gera um ID que não existe
+        const idInexistente = new mongoose.Types.ObjectId(); // Gera um ID que não existe
 
-//         const response = await request(app)
-//             .post(`/cardapio/${idInexistente}/operacoes-refeicao`)
-//             .send(operacoes);
+        const response = await request(app)
+            .post(`/cardapio/${idInexistente}/operacoes-refeicao`)
+            .send(operacoes);
 
-//         expect(response.statusCode).toBe(500);
-//         expect(response.body.message).toBe("Ocorreu um erro ao tentar fazer as operações");
-//         expect(response.body.erro).toContain("Cardapio não encontrado");
-//     });
-// });
+        expect(response.statusCode).toBe(500);
+        expect(response.body.message).toBe("Ocorreu um erro ao tentar fazer as operações");
+        expect(response.body.erro).toContain("Cardapio não encontrado");
+    });
+});
 
 describe("testa /cardapio/hoje", () => {
     it("Faz um get bem sucedido", async () => {
@@ -166,21 +167,9 @@ describe("testa /cardapio/hoje", () => {
         expect(temp.dia).toBe(new Date(new Date(Date.now()).toISOString().split("T")[0]).toISOString());
 
         expect(temp.almoco.length).toEqual(2);
-        for(i = 0; i< temp.almoco; i++) {
-            expect(temp.almoco[i]).toMatchObject(cardapio1.almoco[i]);
-        }
         expect(temp.jantar.length).toEqual(2);
-        for(i = 0; i< temp.jantar; i++) {
-            expect(temp.jantar[i]).toMatchObject(cardapio1.jantar[i]);  
-        }
         expect(temp.cafe.length).toEqual(1);
-        for(i = 0; i< temp.cafe; i++) {
-            expect(temp.cafe[i]).toMatchObject(cardapio1.cafe[i]);  
-        }
-        expect(temp.lanche.length).toEqual(1);
-        for(i = 0; i< temp.lanche; i++) {
-            expect(temp.lanche[i]).toMatchObject(cardapio1.lanche[i]); 
-        }
+        expect(temp.lanche.length).toEqual(2);
 
     }, 10000);
 

@@ -43,43 +43,52 @@ const addRefeicoes = async (cardapio, refeicoes) => {
     }
     return cardapio;
 }
-function findIndexRefeicao(ref, cardapio) {
+async function findIndexRefeicao(ref, cardapio) {
+        
     for (i = 0; i < cardapio[ref.tipo_refeicao].length; i++) {
-        if (ref.bebida === cardapio[ref.tipo_refeicao][i].bebida && ref.comida === cardapio[ref.tipo_refeicao][i].comida) {
-            return i;
+        try{
+            refDoCard = await dbService.findOneBy({_id: cardapio[ref.tipo_refeicao][i]}, modelRef);
+            console.log()
+            if (ref.comida === refDoCard.comida && ref.bebida ===  refDoCard.bebida) {
+                return i;
+            }
+        } catch(e) {
+            continue;
         }
     }
     return -1;
+    
 }
 
 const rmRefeicoes = async (cardapio, refeicoes) => {
-    cardapio = await dbService.populateThis(modelRef, cardapio,['almoco', 'lanche', 'jantar', 'cafe']);
     for (let i = 0; i < refeicoes.length; i++) {
         try {
-            index = findIndexRefeicao(refeicoes[i], cardapio);
+            refeicaoFromDb = await dbService.findOneBy({_id: refeicoes[i]}, modelRef);
+            index = await findIndexRefeicao(refeicaoFromDb, cardapio);
             console.log(index);
-            await dbService.deleteOneBy({ _id: cardapio[refeicoes[i].tipo_refeicao][index]._id }, modelRef);
-            cardapio[refeicoes[i].tipo_refeicao].splice(index, 1);
+            if(index<0) continue;
+            await dbService.deleteOneBy({ _id: refeicaoFromDb._id }, modelRef);
+            cardapio[refeicaoFromDb.tipo_refeicao].splice(index, 1);
         } catch (e) {
             console.error(e)
             continue;
         }
     }
+    console.log("depois do rm: \n"+cardapio)
     return cardapio;
 }
 /* Em desenvolvimento */
 const updRefeicoes = async (cardapio, refeicoes) => {
-    cardapio = await dbService.populateThis(modelRef, cardapio,['almoco', 'lanche', 'jantar', 'cafe']);
     for (let i = 0; i < refeicoes.length; i++) {
         refeicao = await dbService.findOneBy({_id: refeicoes[i]._id}, modelRef);
         tipo_ref_antigo = refeicao.tipo_refeicao;
         // Tiro ref do cardapio
-        index = findIndexRefeicao(refeicao, cardapio);
+        index = await findIndexRefeicao(refeicao, cardapio);
         cardapio[refeicao.tipo_refeicao].splice(index, 1);
         // atualizo a refeicao
-        refeicao.tipo_refeicao = refeicoes[i].tipo_refeicao;
-        refeicao.comida = refeicoes[i].comida;
-        refeicao.bebida = refeicoes[i].bebida;
+        refeicao.tipo_refeicao = !refeicoes[i].tipo_refeicao ? refeicao.tipo_refeicao : refeicoes[i].tipo_refeicao;
+        refeicao.comida = !refeicoes[i].comida ? refeicao.comida: refeicoes[i].comida;
+        refeicao.bebida = !refeicoes[i].bebida ? refeicao.bebida : refeicoes[i].bebida;
         
         try{
             await dbService.save(refeicao, modelRef);
@@ -91,18 +100,22 @@ const updRefeicoes = async (cardapio, refeicoes) => {
         // boto de novo no cardapio
         cardapio[refeicao.tipo_refeicao].push(refeicao._id);
     }
+    console.log("depois do update: \n" + cardapio);
     return cardapio;
 }
 
 const refeicao_ops = async (body, id_cardapio) => {
-    try{ cardapio = await dbService.findOneBy({ _id: id_cardapio }, modelCard); } 
-    catch(e){ throw new Error("Cardapio não encontrado"); }
-
-    if (cardapio == null) throw Error("Cardapio não existe");
-    if (body.add != undefined) cardapio = await addRefeicoes(cardapio, body.add);
-    if (body.rm != undefined) cardapio = await rmRefeicoes(cardapio, body.rm);
-    if (body.upd != undefined) cardapio = await updRefeicoes(cardapio, body.upd);
-    return await dbService.save(cardapio, modelCard);
+    try{ 
+        let cardapio = await dbService.findOneBy({ _id: id_cardapio }, modelCard); 
+        console.log(cardapio);
+        if (body.add != undefined) cardapio = await addRefeicoes(cardapio, body.add);
+        if (body.rm != undefined) cardapio = await rmRefeicoes(cardapio, body.rm);
+        if (body.upd != undefined) cardapio = await updRefeicoes(cardapio, body.upd);
+        return await dbService.save(cardapio, modelCard);
+    }catch(e){ 
+        if(e.message == "Não foi possível encontrar um objeto com as características dadas") throw new Error("Cardapio não encontrado")
+        throw new Error(e.message); 
+    }
 }
 
 module.exports = {

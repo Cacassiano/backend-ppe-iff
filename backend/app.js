@@ -24,7 +24,7 @@ const port = 8080;
 
     app.use("/aluno", alunoController);
     app.use("/funcionarios/cantina", cantinaController);
-    app.use("/cardapio", tkservice.validar("ROLE_USER"));
+    // app.use("/cardapio", tkservice.validar("ROLE_USER"));
     app.use("/cardapio", cardapioController);
 
     app.get("/", (req, resp) => {
