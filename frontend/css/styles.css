@@ -89,7 +89,7 @@ h1, h2, p, a{
 
 #servicosContainer {
     width: 50vw;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -136,7 +136,6 @@ h1, h2, p, a{
     font-weight: bold;
     font-family: sans-serif;
     font-size: 36px;
-    padding-left: 250px;
     padding-top: 10px;
     color: rgb(0, 0, 0);
     
@@ -208,6 +207,7 @@ h1, h2, p, a{
     }
     #title-registro{
         padding-left: 30px;
+        
     }
     #loginForm{
         padding-left: 30px;
