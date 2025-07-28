@@ -15,6 +15,9 @@ const db = require("./src/mongo/db");
 const port = 8080;
 
 (async () => {
+    
+    server = await memoryServer.MongoMemoryServer.create();
+    await db(server.getUri());
     await db(); // conecta ao Mongo antes de tudo
 
     // Middlewares e rotas
