@@ -13,6 +13,13 @@ document.addEventListener("DOMContentLoaded", () => { // ao terminar de carregar
                 headers: {"Content-Type": "application/json"}, // especifica que é json
                 body: JSON.stringify(data) // transforma os dados do form em um objeto json
             });
+        if (response.ok) {
+            const responseData = await response.json();
+            const token = responseData.token;
+
+            localStorage.setItem("token", token);
+            window.location = "index.html"
+        } 
     });
 
     } else if (path.includes('registro.html')) { // se for a pagina de registro

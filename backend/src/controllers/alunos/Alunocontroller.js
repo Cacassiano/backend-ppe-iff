@@ -41,6 +41,7 @@ router.post("/login", async (req,resp) => {
     }
 });
 
+router.use("/validar")
 router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));
 router.get("/detalhes", async (req,resp) => {
     try {
