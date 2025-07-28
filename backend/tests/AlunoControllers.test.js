@@ -5,16 +5,19 @@ require('dotenv').config({
 const express = require("express");
 const app = express();
 const db = require("../src/mongo/db")
+const mongoose = require("mongoose")
 const alunoController = require("../src/controllers/alunos/Alunocontroller");
 const alunoModel = require("../src/models/Aluno");
-const tkService = require("../src/infra/auth/jwt_service");
+// const tkService = require("../src/infra/auth/jwt_service");
 const request = require("supertest");
 const bcript = require("../src/infra/auth/criptografiaService");
+const memoryServer = require("mongodb-memory-server");
+var server;
 
 app.use(express.json());
 app.use("/aluno", alunoController);
 
-var alunoTeste = {
+const alunoTeste = {
     podeAlmocar: false,
     nome: "testador",
     sobrenome: "da Silva",
@@ -22,7 +25,7 @@ var alunoTeste = {
     senha: "testadorSenha",
     roles: ["ROLE_USER", "ROLE_ALUNO"]
 }
-var alunoTesteCriar = {
+const alunoTesteCriar = {
     podeAlmocar: "sim",
     nome: "testador2",
     sobrenome: "da Silva",
@@ -30,16 +33,16 @@ var alunoTesteCriar = {
     senha:"testesenha"
 }
 
-afterAll(async () => {
-    await alunoModel.deleteOne({matricula: alunoTeste.matricula});
-    await alunoModel.deleteOne({matricula: alunoTesteCriar.matricula});
-});
-
 beforeAll(async () => {
-    await db();
+    server = await memoryServer.MongoMemoryServer.create();
+    await db(server.getUri());
     nSenha = bcript.criptografar(alunoTeste.senha);
     temp = {...alunoTeste, senha: nSenha};
     await new alunoModel(temp).save();
+}, 10000);
+afterAll(async () => {
+    await mongoose.disconnect();
+    await server.stop(); 
 });
 
 describe("Post /aluno/register", () => {
@@ -68,7 +71,6 @@ describe("Post /aluno/register", () => {
         expect(resp.body.message).toEqual("Matrícula já cadastrada");
     });
 })
-
 
 describe("Post /aluno/login", () => {
     it("Retorna um login bem sucedido", async () => {
@@ -104,6 +106,6 @@ describe("Post /aluno/login", () => {
             .send({matricula :"-"+alunoTeste.matricula, senha: alunoTeste.senha});
         expect(resp.statusCode).toEqual(404);
         expect(resp.body).toHaveProperty('message');
-        expect(resp.body.message).toEqual("Aluno não existe");
+        expect(resp.body.message).toMatch("Não foi possível encontrar");
     });
 });

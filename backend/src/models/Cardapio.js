@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     dia: {
         type: Date,
         required: true,
-        unique: process.env.STATUS = "PRODUCAO" ? false : true
+        unique: process.env.STATUS === "PRODUCAO" ? false : true
     }, 
     almoco:[
         {
