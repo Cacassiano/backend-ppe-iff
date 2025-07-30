@@ -13,13 +13,17 @@ const tkservice = require('./src/infra/auth/jwt_service');
 const bodyParser = require('body-parser');
 const db = require("./src/mongo/db");
 const memoryServer = require("mongodb-memory-server");
+let bancoURI = process.env.DB_URL
 
 const port = 8080;
 
 (async () => {
     
-    server = await memoryServer.MongoMemoryServer.create();
-    await db(server.getUri()); // conecta ao Mongo antes de tudo
+    if(process.env.STATUS === "PRODUCAO"){
+        const server = await memoryServer.MongoMemoryServer.create();
+        bancoURI = server.getUri();
+    }
+    await db(bancoURI); // conecta ao Mongo antes de tudo
 
     // Middlewares e rotas
     app.use(cors());

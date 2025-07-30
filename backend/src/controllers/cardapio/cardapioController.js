@@ -17,12 +17,6 @@ router.get("/:dia", async (req,resp) =>{
     }
 });
 
-//  a ser desenvolvido
-// router.get("/:data_inicial/:data_final", (req, resp) => {
-//     resp.send("Em producao")
-// });
-
-
 router.use("/criar", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
 router.post("/criar", async(req, resp) => {
     if(!req.body || !req.body.data || !req.body.refeicoes) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
