@@ -26,13 +26,17 @@ router.post("/register", async (req,resp) => {
     }
 });
 
+router.use("/validate", jwtService.validar("ROLE_ALUNO"));
+router.get("/validate", (req, resp) => {
+    return resp.status(200).json({message: "Token valido"});
+})
 
 router.post("/login", async (req,resp) => {
     if(!req.body.matricula || !req.body.senha) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
     try{
         aluno = await Aluno.login(req.body.senha, req.body.matricula);
         token = jwtService.criarToken(req.body.matricula ,aluno.id, req.body.senha);
-        return resp.status(200).json({
+        return resp.status(201).json({
             matricula:req.body.matricula,
             token: token
         });
@@ -41,7 +45,6 @@ router.post("/login", async (req,resp) => {
     }
 });
 
-router.use("/validar")
 router.use("/detalhes", jwtService.validar("ROLE_ALUNO"));
 router.get("/detalhes", async (req,resp) => {
     try {

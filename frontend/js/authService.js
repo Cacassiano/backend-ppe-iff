@@ -1,3 +1,11 @@
+const saveToken= async (response) => {
+    const responseData = await response.json();
+    const token = responseData.token;
+
+    localStorage.setItem("token", token);
+    window.location = "index.html"
+}
+
 document.addEventListener("DOMContentLoaded", () => { // ao terminar de carregar a pagina...
     const path = window.location.pathname
 
@@ -13,13 +21,7 @@ document.addEventListener("DOMContentLoaded", () => { // ao terminar de carregar
                 headers: {"Content-Type": "application/json"}, // especifica que é json
                 body: JSON.stringify(data) // transforma os dados do form em um objeto json
             });
-        if (response.ok) {
-            const responseData = await response.json();
-            const token = responseData.token;
-
-            localStorage.setItem("token", token);
-            window.location = "index.html"
-        } 
+        if (response.ok) saveToken(response);
     });
 
     } else if (path.includes('registro.html')) { // se for a pagina de registro
@@ -44,8 +46,15 @@ document.addEventListener("DOMContentLoaded", () => { // ao terminar de carregar
                 body: JSON.stringify(data)
             })
 
-            avisos.style.color = "chartreuse";
-            avisos.innerText = "Usuário criado com sucesso!";
+            if(response.status === 201) {
+                avisos.style.color = "chartreuse";
+                avisos.innerText = "Usuário criado com sucesso!";
+                saveToken(response)
+            }
+            if(response.status === 409) {
+                avisos.style.color = "red";
+                avisos.innerText = "Usuário já existe!";
+            }
         })
     }
 })
