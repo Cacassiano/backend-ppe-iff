@@ -21,6 +21,7 @@ router.use("/criar", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
 router.post("/criar", async(req, resp) => {
     if(!req.body || !req.body.data || !req.body.refeicoes) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
     try{
+        if(Number.isInteger(req.body.data)) req.body.data = req.body.data-0;
         cardapio = await service.createCardapio(new Date(req.body.data).toISOString().split("T")[0], req.body.refeicoes);
         return resp.status(201).json({
             cardapio:cardapio
