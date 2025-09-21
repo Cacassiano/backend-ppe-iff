@@ -22,12 +22,12 @@ const createCardapio = async (dia, refeicoes) => {
         lanche: [],
     };
     try{
-        cardapio = await addRefeicoes(cardapio, refeicoes);
+        if(refeicoes) cardapio = await addRefeicoes(cardapio, refeicoes);
         cardapio = await dbService.save(cardapio, modelCard);
         return cardapio;
     } catch(e) {
         console.error(`Erro na parte de crir cardapio: ${e}`);
-        rmRefeicoes(cardapio, refeicoes);
+        if(refeicoes) rmRefeicoes(cardapio, refeicoes);
         throw e;
     }
     
