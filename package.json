@@ -1,0 +1,36 @@
+{
+  "name": "ppe_iff_back",
+  "version": "1.0.0",
+  "description": "Backend de uma aplicacao de cardapio para o iff quissamã",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest --runInBand --detectOpenHandles",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cacassiano/ppe-iff.git"
+  },
+  "author": "cassiano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cacassiano/ppe-iff/issues"
+  },
+  "homepage": "https://github.com/Cacassiano/ppe-iff#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.15.1",
+    "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "jest": "^30.0.4",
+    "mongodb-memory-server": "^10.1.4",
+    "supertest": "^7.1.3"
+  }
+}
