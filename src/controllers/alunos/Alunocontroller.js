@@ -36,7 +36,7 @@ router.post("/login", async (req,resp) => {
     try{
         aluno = await Aluno.login(req.body.senha, req.body.matricula);
         token = jwtService.criarToken(req.body.matricula ,aluno.id, req.body.senha);
-        return resp.status(201).json({
+        return resp.status(200).json({
             matricula:req.body.matricula,
             token: token
         });
