@@ -1,6 +1,5 @@
 const save = async (data, model) => {
     let objeto = new model(data);
-    console.log(objeto)
     try{
         objeto = await objeto.save();
     } catch(e){
@@ -12,7 +11,6 @@ const save = async (data, model) => {
 
 const findOneBy = async(querry, model, populateModel=null, populatePaths = null) => {
     objeto = await model.findOne(querry);
-    console.log(querry)
     if (!objeto) throw new Error(`Não foi possível encontrar um objeto com as características dadas`);
     objeto = (populateModel ? await populateModel.populate(objeto, {path: populatePaths}): objeto);
     return objeto;

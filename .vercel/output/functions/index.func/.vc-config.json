@@ -1,0 +1,14 @@
+{
+  "handler": "app.js",
+  "runtime": "nodejs22.x",
+  "architecture": "x86_64",
+  "environment": {},
+  "framework": {
+    "slug": "express",
+    "version": "5.1.0"
+  },
+  "launcherType": "Nodejs",
+  "shouldAddHelpers": true,
+  "shouldAddSourcemapSupport": false,
+  "awsLambdaHandler": ""
+}

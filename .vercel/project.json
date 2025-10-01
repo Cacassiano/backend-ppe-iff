@@ -1,1 +1,16 @@
-{"projectId":"prj_uAa8KDUR7BYGfe07FASsW9qYSVhz","orgId":"team_iXlExWlyZib0UXUQheNGoO5Q","projectName":"ppp-api"}
+{
+  "projectId": "prj_uAa8KDUR7BYGfe07FASsW9qYSVhz",
+  "orgId": "team_iXlExWlyZib0UXUQheNGoO5Q",
+  "projectName": "ppp-api",
+  "settings": {
+    "createdAt": 1758423533328,
+    "framework": "express",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "22.x"
+  }
+}

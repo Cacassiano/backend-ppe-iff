@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const chave = (process.env.SECRET_KEY ? process.env.SECRET_KEY: "senha")
 const umDiaEmSecs = 60*60*24;
-const alunoService = require('../../services/alunoService')
-const funcionariosService = require('../../services/funcionarioServices')
+const alunoService = require('../../services/usuarios/alunoService')
+const funcionariosService = require('../../services/usuarios/funcionarioServices')
 const bcriptService = require('./criptografiaService')
 
 
@@ -14,9 +14,11 @@ const validar = (...roles) => {
         try {
             const conteudo = await jwt.verify(token, chave);
             if(conteudo.id === undefined || conteudo.senha === undefined || conteudo.subject === undefined ) return resp.status(403).json({message: "token invalido"});
-            let sujeito = await findSujeito(conteudo);
-            console.log(sujeito.roles)
-            console.log(roles)
+
+            let sujeito = await alunoService.getById(conteudo.id);
+            
+            if(!sujeito) sujeito = await funcionariosService.getById(conteudo.id);
+            if(!sujeito || !bcriptService.comparar(conteudo.senha, sujeito.senha)) return resp.status(403).json({message: "user nao existe"});
             roles.forEach(role => {
                 if(!sujeito.roles.includes(role)){
                     return resp.status(403).json({message: "acesso não autorizado"});
@@ -43,13 +45,6 @@ const criarToken = (sujeito, id, senha) => {
     return token;
 }
 
-const findSujeito = async (conteudo) => {
-    try {
-        return await alunoService.getById(conteudo.id);
-    } catch (e) {
-        return await funcionariosService.getById(conteudo.id);
-    }
-}
 
 module.exports = {
     criarToken,
