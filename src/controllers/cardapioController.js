@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const service = require('../services/cardapioService')
-const tkservice = require('../infra/auth/jwt_service')
+const tkservice = require('../infra/auth/JWTService')
 
 /* 
     Request:
@@ -51,7 +51,7 @@ router.get("/:dia", async (req,resp) =>{
         }...
     ]
 */
-// router.use("/criar", tkservice.validar("ROLE_FUNC", "ROLE_CANTINA"))
+router.use("/criar", tkservice.validar("ROLE_SER", "ROLE_CANTINA"))
 router.post("/criar", async(req, resp) => {
     if(!req.body || !req.body.data) return resp.status(400).json({message: "Informações requeridas não foram enviadas"});
     try{

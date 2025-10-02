@@ -1,44 +1,33 @@
-const model = require('../models/Aluno');
-const bcriptService = require('../infra/auth/criptografiaService');
-const dbService = require("../mongo/dbService");
-const { response } = require('express');
+const Aluno = require('../models/aluno');
 
-const login = async (senha, mat) => {
-    try{
-        aluno = await dbService.findOneBy({matricula: mat}, model);
-        if(!bcriptService.comparar(senha, aluno.senha)) throw Error("Senha incorreta");
-        return aluno;
-    }catch(e) {
-        console.error("Erro no alunoservice na parte de login:\n" + e);
-        throw e;
+class AlunoService {
+    constructor(BcriptService) {
+        this.BcriptService = BcriptService;
     }
-}
 
-const save = async (body) => {
-    body['senha'] = bcriptService.criptografar(body.senha);
-    body.roles = ["ROLE_USER", "ROLE_ALUNO"]
-    try{
-        aluno = await dbService.save(body, model);
+    async login(senha, mat) {
+        const aluno = await Aluno.findOne({matricula: mat});
+        if(!aluno) throw new Error("Aluno não existe")
+
+        if(!this.BcriptService.isEqual(senha, aluno.senha)) {
+            throw Error("Senha incorreta");
+        }
         return aluno;
-    } catch (e) {
-        console.error("erro alunoService:\n", e);
-        throw e;
     }
-};
 
-const getById = async (id) => {
-    try{
-        aluno = await dbService.findOneBy({_id: id}, model); 
-        return aluno;
-    } catch(e) {
-        console.error(e);
-        throw e;
+    async save(body) {
+        body['senha'] = this.BcriptService.criptografar(body.senha);
+        body.roles = ["ROLE_USER", "ROLE_ALUNO"];
+
+        const aluno = new Aluno(body);
+        console.log("aluno: ", aluno);  
+
+        return await aluno.save();
     }
-    
-}
 
-module.exports = {
-    save,
-    login,
-    getById,
-}
+    async getById (id) {
+        return await Aluno.findOne({_id: id});
+    }
+} 
+
+module.exports = AlunoService
