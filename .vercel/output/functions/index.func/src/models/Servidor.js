@@ -24,11 +24,11 @@ const schema = new mongoose.Schema({
     roles: [
         {
             type:String,
-            default: "ROLE_FUNC"
+            default: "ROLE_SER"
         }
     ]
 }, {timestamps: true, id: true});
 
-const model = mongoose.model("Funcionario", schema);
+const model = mongoose.model("Servidor", schema);
 
 module.exports = model;

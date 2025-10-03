@@ -70,7 +70,7 @@ class App {
 
     // mongo memory server cache location: 
     // C:\Users\User\AppData\Local\Temp
-    if (process.env.STATUS === "PRODUCAO") {
+    if (process.env.STATUS === "TEST") {
         const server = await memoryServer.MongoMemoryServer.create();
         bancoURI = server.getUri();
     }
