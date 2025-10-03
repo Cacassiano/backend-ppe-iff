@@ -45,7 +45,7 @@ class ServidorController {
             })
         } catch(e) {
             if (e.code == 11000) {
-                console.error("MATRICULA JA REGISTRADA")
+                console.error("EMAIL JA REGISTRADA")
                 return resp.status(409).json({ message: "Email já cadastrado" });
             }
             return resp.status(500).json({message: e.message});

@@ -27,7 +27,9 @@ class JwtService {
                 
                 // Procura o sujeito no banco de dados
                 let sujeito = await this.findSujeito(conteudo);
-                
+                if(!sujeito) {
+                    return resp.status(403).json({message: "token invalido"});
+                } 
                 // Verifica se as roles do sujeito incluem todas as roles requeridas
                 this.validarRoles(sujeito.roles, roles);
 
