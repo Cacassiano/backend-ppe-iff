@@ -16,14 +16,24 @@ module.exports = class CardapioController {
         );
         this.router.post(
             "/", 
-            // this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"), 
+            this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"), 
             this.createCardapio.bind(this)
         );
         // Atualiza uma lista de refeicoes do cardápio
         this.router.post(
             "/:id_cardapio/refeicoes", 
-            // this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"), 
+            this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"), 
             this.refeicao_ops.bind(this)
+        );
+        this.router.delete(
+            "/:id_cardapio",
+            this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"),
+            this.deleteCardapio.bind(this)
+        );
+        this.router.put(
+            "/:id_cardapio",
+            this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"),
+            this.updateCardapio.bind(this)
         );
     }
 
@@ -110,89 +120,47 @@ module.exports = class CardapioController {
             });
         }
     }
+
+    async deleteCardapio(req, resp) {
+        try {
+            if(!req.params.id_cardapio) {
+                return resp.status(400).json({message: "ID do cardápio não informado"});
+            }
+            const deleted = await this.CardapioService.deleteCardapio(req.params.id_cardapio);
+            if(!deleted) {
+                return resp.status(404).json({message: "Cardápio não encontrado com id: " + req.params.id_cardapio});
+            }
+            return resp.status(204).send();
+        } catch(e) {
+            console.error(e);
+            return resp.status(500).json({
+                message: "Ocorreu um erro ao tentar deletar o cardápio",
+                erro: e.message
+            });
+        }
+    }
+
+    async updateCardapio(req, resp) {
+        try {
+            if(!req.params.id_cardapio || !req.body.data) {
+                return resp.status(400).json({message: "Informações requeridas não informadas"});
+            }
+            const cardapio = await this.CardapioService.updateCardapio(
+                new Date(req.body.data).toISOString().split("T")[0],
+                req.params.id_cardapio
+            );
+            if(!cardapio) {
+                return resp.status(404).json({message: "Cardápio não encontrado com id: " + req.params.id_cardapio});
+            }
+            return resp.status(200).json({
+                cardapio: cardapio
+            });
+        } catch(e) {
+            console.error(e);
+            return resp.status(500).json({
+                message: "Ocorreu um erro ao tentar atualizar o cardápio",
+                erro: e.message
+            });
+        }
+    }
 }
-/*
-    Response:
-    cardapio: {
-        dia: dia,
-        almoco: [...],
-        jantar: [...],
-        cafe: [...],
-        lanche: [...],
-    }
-*/
-
-// Create cardapio
-/*
-    REQUEST: 
-
-    (obrigatorio)data: Inteiro/String,
-    (opcional)refeicoes: [
-        {
-            tipo_refeicao: String,
-            comida: String,
-            bebida: String
-        },
-        {
-            tipo_refeicao: String,
-            comida: String,
-            bebida: String
-        }...
-    ]
-*/
-
-
-// create
-/*
-    RESPONSE:
-    cardapio = {
-        dia: dia,
-        almoco: [...],
-        jantar: [...],
-        cafe: [...],
-        lanche: [...],
-    };
-
-*/
-
-// Update refs
-/*
-    REQUEST:
-    upd: [
-        {
-            _id: String,
-            tipo_refeicao: String,
-            comida: String,
-            bebida: String
-        }
-        ...
-    ],
-    rm:  [
-        {
-            tipo_refeicao: String,
-            comida: String,
-            bebida: String
-        }
-        ...
-    ],
-    add: [
-        {
-            tipo_refeicao: String,
-            comida: String,
-            bebida: String
-        }
-        ...
-    ]
-*/
-
-/*
-    RESPONSE:
-    cardapio: {
-        dia: dia,
-        almoco: [...],
-        jantar: [...],
-        cafe: [...],
-        lanche: [...],
-    }
-
-*/

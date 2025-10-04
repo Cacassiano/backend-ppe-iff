@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
             default: "ROLE_SER"
         }
     ]
-}, {timestamps: true, id: true});
+}, {id: true});
 
 const model = mongoose.model("Servidor", schema);
 

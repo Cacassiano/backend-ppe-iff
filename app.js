@@ -50,7 +50,7 @@ class App {
         this.app.use("/servidores", this.ServidorController.router);
         this.app.use(
             "/cardapios", 
-            // this.JwtService.validar("ROLE_USER"), 
+            this.JwtService.validar("ROLE_USER"), 
             this.CardapioController.router
         );
 

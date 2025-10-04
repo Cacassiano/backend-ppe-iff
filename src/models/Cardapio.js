@@ -35,7 +35,7 @@ const schema = new mongoose.Schema({
         }
     ],
 
-}, {timestamps: true, id: true});
+}, {id: true});
 
 const model = mongoose.model("Cardapio", schema)
 

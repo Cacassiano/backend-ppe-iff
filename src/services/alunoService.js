@@ -21,8 +21,8 @@ class AlunoService {
 
         const aluno = new Aluno(body);
         console.log("aluno: ", aluno);  
-
-        return await aluno.save();
+        
+        return await Aluno.create(aluno); 
     }
 
     async getById (id) {

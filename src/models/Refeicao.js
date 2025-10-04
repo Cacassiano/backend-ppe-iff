@@ -16,7 +16,7 @@ const schema = new mongoose.Schema({
         default:"NA",
         unique:false
     }
-}, {timestamps:true, id:true});
+}, {id:true});
 
 const model = mongoose.model("Refeicao", schema)
 

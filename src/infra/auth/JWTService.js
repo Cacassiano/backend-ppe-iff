@@ -48,8 +48,8 @@ class JwtService {
     }
 
     validarRoles = (sujeitoRoles, rolesRequeridas) => {
-        console.log(sujeitoRoles)
-        console.log(rolesRequeridas)
+        // console.log(sujeitoRoles)
+        // console.log(rolesRequeridas)
         rolesRequeridas.forEach(role => {
             if(!sujeitoRoles.includes(role)){
                 return resp.status(403).json({message: "acesso não autorizado"});

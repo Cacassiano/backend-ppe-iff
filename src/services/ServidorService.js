@@ -10,7 +10,7 @@ class ServidorService {
         body.roles = ["ROLE_USER", "ROLE_SER"].concat(roles);
 
         const func  = new Servidor(body);
-        return await func.save();
+        return await Servidor.create(func);
     }
 
     async login(senha, iemail) {

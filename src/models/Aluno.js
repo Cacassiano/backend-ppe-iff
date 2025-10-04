@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
             default:"ROLE_ALUNO"
         }
     ]
-}, {timestamps:true, id:true});
+}, {id:true});
 const entity = mongoose.model("Aluno", schema);
 
 module.exports = entity;
