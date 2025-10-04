@@ -99,15 +99,7 @@ class App {
 
 (async () => {
 
-    // mongo memory server cache location: 
-    // C:\Users\User\AppData\Local\Temp
-    if (process.env.STATUS === "PRODUCAO") {
-        const server = await memoryServer.MongoMemoryServer.create();
-        bancoURI = server.getUri();
-    }
-    await db(bancoURI);
-
-    // Dependency Injection
+    // Injeção de dependencias
     const bcriptService = new BcriptService();
     const alunoService = new AlunoService(bcriptService);
     const refeicaoService = new RefeicaoService();
@@ -116,7 +108,6 @@ class App {
 
     const jwtService = new JwtService(alunoService, servidorService, bcriptService);
 
-    // Controllers should be refactored to accept services via constructor and expose a .router property (an express.Router)
     const alunoController = new AlunoController(alunoService, jwtService);
     const servidorController = new ServidorController(servidorService, jwtService);
     const cardapioController = new CardapioController(cardapioService, refeicaoService, jwtService);
