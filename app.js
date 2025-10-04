@@ -126,4 +126,4 @@ let appInstance
     appInstance.listen(port);
 })();
 
-module.exports = appInstance;
+module.exports = appInstance.app;
