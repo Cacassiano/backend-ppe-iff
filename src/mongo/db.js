@@ -5,7 +5,7 @@ const conexao = async (uri) => {
     try {
         console.log("Iniciando conexao com o banco...");
         console.log("URI recebida:", uri);
-        console.log("mongoose.connect existe?", typeof mongoose.connect);
+        console.log("mongoose.connect existe?", typeof mongodb.connect);
         await mongodb.connect(uri);
         console.log("Conexao com o MongoDB estabelecida");
     } catch (err) {
