@@ -97,6 +97,7 @@ class App {
     }
 }
 
+let appInstance
 (async () => {
 
     // conecta com o DB
@@ -115,7 +116,7 @@ class App {
     const servidorController = new ServidorController(servidorService, jwtService);
     const cardapioController = new CardapioController(cardapioService, refeicaoService, jwtService);
 
-    const appInstance = new App(
+    appInstance = new App(
         alunoController,
         servidorController,
         cardapioController,
@@ -125,4 +126,4 @@ class App {
     appInstance.listen(port);
 })();
 
-module.exports = App;
+module.exports = appInstance;
