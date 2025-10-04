@@ -39,11 +39,42 @@ class App {
         this.configurarRotas();
     }
 
-    configurarMiddlewares() {
-        this.app.use(cors());
-        this.app.use(bodyParser.urlencoded({ extended: false }));
-        this.app.use(express.json());
-    }
+   configurarMiddlewares() {
+    // Origens permitidas (adiciona localhost pra dev)
+    const allowedOrigins = [
+        'https://frontend-ppe-iff.vercel.app',
+        'http://localhost:3000'
+    ];
+
+    const corsOptions = {
+        origin: (origin, callback) => {
+            // origin === undefined acontece em requests via curl / Postman (não-browsers)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            } else {
+                return callback(new Error('CORS policy: origin not allowed'), false);
+            }
+        },
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+         allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'], // clean e funcional
+
+        exposedHeaders: ['Authorization'], // se você expõe token no header
+        credentials: true, // IMPORTANTÍSSIMO se o front mandar cookies ou usar credentials
+        maxAge: 600 // cache da preflight por 10 minutos
+    };
+
+    // Use CORS com as opções definidas
+    this.app.use(cors(corsOptions));
+
+    // responde preflight apenas para rotas que realmente existem
+    this.app.options(['/alunos', '/funcionarios', '/cardapios'], cors(corsOptions));
+
+
+    this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(express.json());
+}
+
 
     configurarRotas() {
         this.app.use("/alunos", this.AlunoController.router);
