@@ -30,6 +30,7 @@ class App {
         CardapioController,
         JwtService
     ) {
+        this.conectarBanco();
         this.app = express();
         this.AlunoController = AlunoController;
         this.ServidorController = ServidorController;
@@ -37,6 +38,7 @@ class App {
         this.JwtService = JwtService;
         this.configurarMiddlewares();
         this.configurarRotas();
+        
     }
 
    configurarMiddlewares() {
@@ -75,6 +77,10 @@ class App {
         this.app.use(express.json());
     }
 
+    async conectarBanco() {
+        // conecta com o DB
+        await db(bancoURI);
+    }
 
     configurarRotas() {
         this.app.use("/alunos", this.AlunoController.router);
@@ -98,11 +104,7 @@ class App {
 }
 
 let appInstance
-(async () => {
-
-    // conecta com o DB
-    await db(bancoURI);
-
+(() => {
     // Injeção de dependencias
     const bcriptService = new BcriptService();
     const alunoService = new AlunoService(bcriptService);
