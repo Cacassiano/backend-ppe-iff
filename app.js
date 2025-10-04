@@ -6,16 +6,16 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 // const memoryServer = require("mongodb-memory-server");
-const db = require("./src/mongo/DB");
+const db = require("./src/mongo/db");
 
-const AlunoController = require('./src/controllers/AlunoController');
+const AlunoController = require('./src/controllers/Alunocontroller');
 const ServidorController = require('./src/controllers/ServidorController');
-const CardapioController = require("./src/controllers/CardapioController");
+const CardapioController = require("./src/controllers/cardapioController");
 const JwtService = require('./src/infra/auth/JWTService');
 
 const RefeicaoService = require('./src/services/RefeicaoService');
 const AlunoService = require('./src/services/alunoService');
-const CardapioService = require('./src/services/CardapioService');
+const CardapioService = require('./src/services/cardapioService');
 const ServidorService = require('./src/services/ServidorService');
 
 const BcriptService = require('./src/infra/auth/BcriptService');
