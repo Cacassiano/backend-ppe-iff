@@ -4,7 +4,8 @@ const mongodb = require('mongoose');
 const conexao = async (uri) => {
     try {
         console.log("Iniciando conexao com o banco...");
-        console.log("DB_URL recebido:", process.env.DB_URL);
+        console.log("URI recebida:", uri);
+        console.log("mongoose.connect existe?", typeof mongoose.connect);
         await mongodb.connect(uri);
         console.log("Conexao com o MongoDB estabelecida");
     } catch (err) {
