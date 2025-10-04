@@ -5,7 +5,7 @@ require('dotenv').config({
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const memoryServer = require("mongodb-memory-server");
+// const memoryServer = require("mongodb-memory-server");
 const db = require("./src/mongo/DB");
 
 const AlunoController = require('./src/controllers/AlunoController');
@@ -98,6 +98,9 @@ class App {
 }
 
 (async () => {
+
+    // conecta com o DB
+    await db(bancoURI);
 
     // Injeção de dependencias
     const bcriptService = new BcriptService();
