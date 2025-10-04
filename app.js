@@ -57,7 +57,7 @@ class App {
             }
         },
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+        allowedHeaders: ['Content-Type", "Authorization", "Access-Control-Allow-Origin'],
         exposedHeaders: ['Authorization'], // se você expõe token no header
         credentials: true, // IMPORTANTÍSSIMO se o front mandar cookies ou usar credentials
         maxAge: 600 // cache da preflight por 10 minutos
