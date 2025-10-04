@@ -41,46 +41,41 @@ class App {
 
    configurarMiddlewares() {
   const allowedOrigins = [
-    'https://frontend-ppe-iff.vercel.app',
-    'http://localhost:3000'
+    /\.vercel\.app$/,   // pega qualquer preview do Vercel
+    /^http:\/\/localhost:3000$/
   ];
 
   const corsOptions = {
     origin: (origin, callback) => {
-      // origin === undefined quando request é via curl/postman (non-browser)
+      // requests de curl/postman ou browser sem origin
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      // origin como regex
+      if (allowedOrigins.some((pattern) => pattern.test(origin))) {
         return callback(null, true);
       }
 
       console.warn('[CORS] Origin bloqueada:', origin);
-      // **Não** lança erro — apenas recusa
-      return callback(null, false);
+      return callback(new Error('CORS not allowed')); // agora lança erro pra bloquear
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // keep it minimal
-    exposedHeaders: ['Authorization'],
     credentials: true,
-    maxAge: 600,
+    methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization'],
+    exposedHeaders: ['Authorization'],
     optionsSuccessStatus: 204
   };
 
-  // Log simples pra ver o que tá chegando (útil pra debugar)
-  this.app.use((req, res, next) => {
-    console.log('[REQ] origin:', req.headers.origin, '->', req.method, req.path);
-    next();
-  });
-
   this.app.use(cors(corsOptions));
-  // remove this.app.options('*'...) ou options([...]) — desnecessário
-
   this.app.use(bodyParser.urlencoded({ extended: false }));
   this.app.use(express.json());
 
-  // responde preflight apenas para rotas que realmente existem
-  this.app.options(['/alunos', '/funcionarios', '/cardapios'], cors(corsOptions));
+  // log pra ver requests
+  this.app.use((req,res,next)=>{
+    console.log('[REQ]', req.method, req.path, req.headers.origin);
+    next();
+  });
 }
+
 
 
     configurarRotas() {
