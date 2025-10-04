@@ -40,39 +40,46 @@ class App {
     }
 
    configurarMiddlewares() {
-    // Origens permitidas (adiciona localhost pra dev)
-    const allowedOrigins = [
-        'https://frontend-ppe-iff.vercel.app',
-        'http://localhost:3000'
-    ];
+  const allowedOrigins = [
+    'https://frontend-ppe-iff.vercel.app',
+    'http://localhost:3000'
+  ];
 
-    const corsOptions = {
-        origin: (origin, callback) => {
-            // origin === undefined acontece em requests via curl / Postman (não-browsers)
-            if (!origin) return callback(null, true);
-            if (allowedOrigins.includes(origin)) {
-                return callback(null, true);
-            } else {
-                return callback(new Error('CORS policy: origin not allowed'), false);
-            }
-        },
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-         allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'], // clean e funcional
+  const corsOptions = {
+    origin: (origin, callback) => {
+      // origin === undefined quando request é via curl/postman (non-browser)
+      if (!origin) return callback(null, true);
 
-        exposedHeaders: ['Authorization'], // se você expõe token no header
-        credentials: true, // IMPORTANTÍSSIMO se o front mandar cookies ou usar credentials
-        maxAge: 600 // cache da preflight por 10 minutos
-    };
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
 
-    // Use CORS com as opções definidas
-    this.app.use(cors(corsOptions));
+      console.warn('[CORS] Origin bloqueada:', origin);
+      // **Não** lança erro — apenas recusa
+      return callback(null, false);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'], // keep it minimal
+    exposedHeaders: ['Authorization'],
+    credentials: true,
+    maxAge: 600,
+    optionsSuccessStatus: 204
+  };
 
-    // responde preflight apenas para rotas que realmente existem
-    this.app.options(['/alunos', '/funcionarios', '/cardapios'], cors(corsOptions));
+  // Log simples pra ver o que tá chegando (útil pra debugar)
+  this.app.use((req, res, next) => {
+    console.log('[REQ] origin:', req.headers.origin, '->', req.method, req.path);
+    next();
+  });
 
+  this.app.use(cors(corsOptions));
+  // remove this.app.options('*'...) ou options([...]) — desnecessário
 
-    this.app.use(bodyParser.urlencoded({ extended: false }));
-    this.app.use(express.json());
+  this.app.use(bodyParser.urlencoded({ extended: false }));
+  this.app.use(express.json());
+
+  // responde preflight apenas para rotas que realmente existem
+  this.app.options(['/alunos', '/funcionarios', '/cardapios'], cors(corsOptions));
 }
 
 
