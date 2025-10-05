@@ -60,9 +60,9 @@ class JwtService {
         subject: sujeito,
         id: id,
         role: role,
-        exp: this.tempoExpiracao, // atualmente 1 dia
       },
-      this.chave
+      this.chave,
+      {expiresIn: this.tempoExpiracao}
     );
 
     return token;
