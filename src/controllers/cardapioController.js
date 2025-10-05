@@ -1,5 +1,3 @@
-const ALL_ROLES = require('../helpers/Roles')
-
 module.exports = class CardapioController {
     constructor(CardapioService, RefeicaoService, JwtService) {
         this.CardapioService = CardapioService;
@@ -14,7 +12,7 @@ module.exports = class CardapioController {
         this.router.get(
             "/:dia", 
             // todo mundo pode ver o cardapio
-            this.JwtService.validar(ALL_ROLES), 
+            this.JwtService.validar("ROLE_ALUNO", "ROLE_USER", "ROLE_CANTINA", "ROLE_SER"), 
             this.getCardapioByData.bind(this)
         );
         this.router.post(
