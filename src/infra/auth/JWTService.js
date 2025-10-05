@@ -21,7 +21,7 @@ class JwtService {
                 // Descodifica o token
                 const conteudo = await jwt.verify(token, this.chave);
                 // Verifica se o token contém os campos necessários
-                if(conteudo.id === undefined || conteudo.senha === undefined || conteudo.subject === undefined ) {
+                if(conteudo.id === undefined || conteudo.subject === undefined ) {
                     return resp.status(403).json({message: "token invalido"});
                 }
                 
@@ -33,10 +33,6 @@ class JwtService {
                 // Verifica se as roles do sujeito incluem todas as roles requeridas
                 this.validarRoles(sujeito.roles, roles);
 
-                // Verifica se a senha no token corresponde à senha atual do sujeito
-                if(!this.BcriptService.isEqual(conteudo.senha, sujeito.senha)) {
-                    return resp.status(403).json({message: "token invalido"});
-                }
                 // Adiciona as informações do usuário à requisição
                 req.user = conteudo;
                 return next();
