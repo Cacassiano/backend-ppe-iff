@@ -6,7 +6,7 @@ class JwtService {
         this.ServidorService = ServidorService;
         this.BcriptService = BcriptService;
 
-        this.tempoExpiracao = 60*60*24;
+        this.tempoExpiracao = 1;
         this.chave = (process.env.SECRET_KEY ? process.env.SECRET_KEY: "senha");
     }
 
@@ -44,14 +44,10 @@ class JwtService {
     }
 
     validarRoles = (sujeitoRoles, rolesRequeridas) => {
-        // console.log(sujeitoRoles)
-        // console.log(rolesRequeridas)
-        rolesRequeridas.forEach(role => {
-            if(!sujeitoRoles.includes(role)){
-                return resp.status(403).json({message: "acesso não autorizado"});
-            }
-        })
-    }
+    const temAcesso = rolesRequeridas.some(role => sujeitoRoles.includes(role));
+    if (!temAcesso) throw new Error("acesso não autorizado");
+}
+
     criarToken = (sujeito, id, role) => {
         // Cria o token JWT com os dados do sujeito e tempo de expiração
         // Sujeito pode ser matrícula ou email
@@ -60,7 +56,7 @@ class JwtService {
             subject: sujeito,
             id: id,
             role: role,
-            exp: Date.now()+2*this.tempoExpiracao,
+            exp: this.tempoExpiracao + "h", // atualmente 1 hora
         }, this.chave);
 
         return token;
