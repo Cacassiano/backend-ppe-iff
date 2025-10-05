@@ -45,7 +45,7 @@ class App {
     // Origens permitidas (adiciona localhost pra dev)
         const allowedOrigins = [
             'https://frontend-ppe-iff.vercel.app',
-            'http://localhost:3000'
+            'http://localhost:5173'
         ];
 
         const corsOptions = {
