@@ -28,7 +28,7 @@ class AlunoController {
         req.body.podeAlmocar = (req.body.podeAlmocar == "sim");
         try {
             const aluno = await this.AlunoService.save(req.body);
-            const token = this.JwtService.criarToken(req.body.matricula, aluno.id, senha);
+            const token = this.JwtService.criarToken(req.body.matricula, aluno.id, "ROLE_ALUNO");
             return resp.status(201).json({
                 matricula: aluno.matricula,
                 token: token
@@ -52,7 +52,7 @@ class AlunoController {
             return resp.status(400).json({ message: "Informações requeridas não foram enviadas" });
         try {
             const aluno = await this.AlunoService.login(req.body.senha, req.body.matricula);
-            const token = this.JwtService.criarToken(aluno.matricula, aluno.id, req.body.senha);
+            const token = this.JwtService.criarToken(aluno.matricula, aluno.id, "ROLE_ALUNO");
             return resp.status(200).json({
                 matricula: aluno.matricula,
                 token: token

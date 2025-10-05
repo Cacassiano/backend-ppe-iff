@@ -20,7 +20,7 @@ class ServidorController {
         }
         try{
             const func = await this.ServidorService.login(req.body.senha, req.body.email)
-            const token = this.JwtService.criarToken(func.email, func.id, req.body.senha);
+            const token = this.JwtService.criarToken(func.email, func.id, ["ROLE_SER", "ROLE_CANTINA"]);
             resp.status(200).json({
                 token: token,
                 email: func.email
@@ -38,7 +38,7 @@ class ServidorController {
             const senha = req.body.senha;
             const func = await this.ServidorService.save(req.body, ["ROLE_CANTINA"]);
 
-            const token = this.JwtService.criarToken(func.email, func.id, senha);
+            const token = this.JwtService.criarToken(func.email, func.id, ["ROLE_SER", "ROLE_CANTINA"]);
             resp.status(201).json({
                 token: token,
                 email: func.email

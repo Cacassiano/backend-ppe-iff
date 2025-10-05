@@ -56,15 +56,14 @@ class JwtService {
             }
         })
     }
-    criarToken = (sujeito, id, senha) => {
+    criarToken = (sujeito, id, role) => {
         // Cria o token JWT com os dados do sujeito e tempo de expiração
         // Sujeito pode ser matrícula ou email
         // id é o id do usuário no banco de dados
-        // senha é a senha do usuário (não criptografada)
         const token = jwt.sign({
             subject: sujeito,
             id: id,
-            senha: senha,
+            role: role,
             exp: Date.now()+2*this.tempoExpiracao,
         }, this.chave);
 

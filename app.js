@@ -61,8 +61,8 @@ class App {
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'], // clean e funcional
 
-            exposedHeaders: ['Authorization'], // se você expõe token no header
-            credentials: true, // IMPORTANTÍSSIMO se o front mandar cookies ou usar credentials
+            exposedHeaders: ['Authorization'],
+            credentials: true,
             maxAge: 600 // cache da preflight por 10 minutos
         };
 
@@ -70,7 +70,7 @@ class App {
         this.app.use(cors(corsOptions));
 
         // responde preflight apenas para rotas que realmente existem
-        this.app.options(['/alunos', '/funcionarios', '/cardapios'], cors(corsOptions));
+        this.app.options(['/alunos', '/servidores', '/cardapios'], cors(corsOptions));
 
 
         this.app.use(bodyParser.urlencoded({ extended: false }));
