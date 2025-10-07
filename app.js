@@ -6,7 +6,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 // const memoryServer = require("mongodb-memory-server");
-const db = require("./src/mongo/db");
 
 const AlunoController = require('./src/controllers/Alunocontroller');
 const ServidorController = require('./src/controllers/ServidorController');
@@ -19,8 +18,6 @@ const CardapioService = require('./src/services/cardapioService');
 const ServidorService = require('./src/services/ServidorService');
 
 const BcriptService = require('./src/infra/auth/BcriptService');
-
-let bancoURI = process.env.DB_URL;
 const port = 8080;
 
 class App {
@@ -30,7 +27,6 @@ class App {
         CardapioController,
         JwtService
     ) {
-        this.conectarBanco();
         this.app = express();
         this.AlunoController = AlunoController;
         this.ServidorController = ServidorController;
@@ -75,11 +71,6 @@ class App {
 
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use(express.json());
-    }
-
-    async conectarBanco() {
-        // conecta com o DB
-        await db(bancoURI);
     }
 
     configurarRotas() {

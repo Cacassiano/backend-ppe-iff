@@ -2,10 +2,10 @@
   "name": "ppe_iff_back",
   "version": "1.0.0",
   "description": "Backend de uma aplicacao de cardapio para o iff quissamã",
-  "main": "app.js",
+  "main": "api/index.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles",
-    "start": "node app.js"
+    "start": "node api/index.js"
   },
   "repository": {
     "type": "git",
