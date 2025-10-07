@@ -14,10 +14,10 @@ class ServidorService {
     }
 
     async login(senha, iemail) {
-        tempoDeEspera = Date.now(); 
+        const tempoDeEspera = Date.now(); 
         const func = await Servidor.findOne({email: iemail});
         console.log("tempo total de espera: " + (Date.now() - tempoDeEspera)+ "ms");
-        
+
         if(!this.BcriptService.isEqual(senha, func.senha)) { 
             throw Error("Senha incorreta");
         }
