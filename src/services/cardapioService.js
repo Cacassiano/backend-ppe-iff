@@ -8,13 +8,14 @@ module.exports = class CardapioService {
     async getCardapioByData(data) {
         [data,] = data.toISOString().split("T");
 
+        tempoDeEspera = Date.now(); 
         const cardapio = await Cardapio
             .find({ dia: {$gte: new Date(data)} })
             .populate('almoco')
             .populate('jantar')
             .populate('cafe')
             .populate('lanche');
-
+        console.log("tempo total de espera: " + (Date.now() - tempoDeEspera)+ "ms");
         return cardapio;
     }
 
