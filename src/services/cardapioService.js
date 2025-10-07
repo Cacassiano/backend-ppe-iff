@@ -9,7 +9,7 @@ module.exports = class CardapioService {
         [data,] = data.toISOString().split("T");
 
         const cardapio = await Cardapio
-            .findOne({ dia: new Date(data)})
+            .find({ dia: {$gte: new Date(data)} })
             .populate('almoco')
             .populate('jantar')
             .populate('cafe')
