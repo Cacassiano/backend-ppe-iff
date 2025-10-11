@@ -36,6 +36,7 @@ module.exports = class CardapioService {
             cafe: [],
             lanche: [],
         };
+        console.log(refeicoes)
         if(refeicoes) {
             await this.RefeicaoService.createManyRefeicao(refeicoes, cardapio);
         }

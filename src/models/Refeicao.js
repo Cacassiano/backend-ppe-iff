@@ -6,6 +6,11 @@ const schema = new mongoose.Schema({
         unique:false,
         required:true
     },
+    tipo_comida:{
+        unique:false,
+        type:String,
+        required:false
+    },
     comida: {
         type:String,
         unique:false,
