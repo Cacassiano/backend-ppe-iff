@@ -8,8 +8,10 @@ const conexao = async (uri) => {
         console.log("mongoose.connect existe?", typeof mongodb.connect);
         await mongodb.connect(uri);
         console.log("Conexao com o MongoDB estabelecida");
+        return true
     } catch (err) {
         console.error("Erro ao conectar no MongoDB:", err.message);
+        return false
     }
 };
 
