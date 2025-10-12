@@ -3,6 +3,7 @@ module.exports = class CardapioController {
         this.CardapioService = CardapioService;
         this.RefeicaoService = RefeicaoService;
         this.JwtService = JwtService;
+        this.cache = {}
         this.router = require('express').Router();
 
         this.configurarRotas();
@@ -48,13 +49,17 @@ module.exports = class CardapioController {
             // Converte dia para inteiro se for possível
             if(Number.isInteger(req.params.dia)) req.params.dia = req.params.dia-0;
             // Se o parâmetro dia for "hoje", pega o cardapio do dia atual
-            const data = new Date(req.params.dia == "hoje" ? Date.now(): req.params.dia);
+            const [data, ] = new Date(req.params.dia == "hoje" ? Date.now(): req.params.dia).toISOString().split("T");
             // Pega o cardapio do dia
-            const cardapio = await this.CardapioService.getCardapioByData(data);
+            let cardapio = this.getFromCache();
             if(!cardapio) {
-                return resp.status(404).json({message: "Cardapio não encontrado"});
+                
+                cardapio = await this.CardapioService.getCardapioByData(data);
+                if(!cardapio) {
+                    return resp.status(404).json({message: "Cardapio não encontrado"});
+                }
+                this.insertIntoCache(cardapio, req.params.dia);
             }
-
             return resp.status(200).json({
                 cardapio: cardapio
             });
@@ -66,6 +71,15 @@ module.exports = class CardapioController {
         }
     }
 
+    getFromCache() {
+        console.log(this.cache)
+        return this.cache.hoje
+    }
+    insertIntoCache(card, dia) {
+        if(dia == "hoje") {
+            this.cache.hoje = card
+        }
+    }
     async createCardapio(req, resp) {
         try{
             if(!req.body || !req.body.data) {

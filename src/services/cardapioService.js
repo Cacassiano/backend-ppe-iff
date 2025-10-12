@@ -6,7 +6,7 @@ module.exports = class CardapioService {
     }
 
     async getCardapioByData(data) {
-        [data,] = data.toISOString().split("T");
+        
 
         const tempoDeEspera = Date.now(); 
         const cardapio = await Cardapio
