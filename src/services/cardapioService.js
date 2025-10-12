@@ -55,7 +55,14 @@ module.exports = class CardapioService {
     }
 
     async deleteCardapio(id_cardapio) {
-        return await Cardapio.findByIdAndDelete(id_cardapio);
+        const cardapio = await this.getCardapioById(id_cardapio);
+
+        this.RefeicaoService.deleteRefeicoes(cardapio.almoco,cardapio);
+        this.RefeicaoService.deleteRefeicoes(cardapio.cafe,cardapio);
+        this.RefeicaoService.deleteRefeicoes(cardapio.lanche,cardapio);
+        this.RefeicaoService.deleteRefeicoes(cardapio.jantar,cardapio);
+        
+        return await Cardapio.deleteOne({_id: id_cardapio});
     }
 
     async updateCardapio(dia, id_cardapio) {
