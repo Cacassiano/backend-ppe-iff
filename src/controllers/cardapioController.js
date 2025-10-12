@@ -139,8 +139,10 @@ module.exports = class CardapioController {
             if(!req.params.id_cardapio || (!req.body.data && !req.body.add && !req.body.rm && !req.body.upd)) {
                 return resp.status(400).json({message: "Informações requeridas não informadas"});
             }
+            if(req.body.data && Number.isInteger(req.body.data)) req.body.data = new Date(req.body.data-0).toISOString().split("T")[0];
+            else if(req.body.data) req.body.data = new Date(req.body.data).toISOString().split("T")[0];
             const cardapio = await this.CardapioService.updateCardapio(
-                new Date(req.body.data).toISOString().split("T")[0],
+                req.body.data,
                 req.params.id_cardapio,
                 req.body
             );

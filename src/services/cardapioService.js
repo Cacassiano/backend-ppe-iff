@@ -66,8 +66,8 @@ module.exports = class CardapioService {
         if(!cardapio) return null;
 
         await this.updateRefeicoes({add: body.add, rm: body.rm, upd: body.upd}, cardapio)
-        cardapio.dia = dia;
+        if(dia) cardapio.dia = dia;
         console.log("cardapio atualizado: "+cardapio);
-        return await cardapio.save();;
+        return await cardapio.save();
     }
 }
