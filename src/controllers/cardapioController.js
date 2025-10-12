@@ -96,6 +96,10 @@ module.exports = class CardapioController {
             );
             // Verifica se o cardapio foi criado
             if(!cardapio) throw new Error("Erro desconhecido");
+
+            // Limpa o cache
+            delete this.cache.hoje;
+
             return resp.status(201).json({
                 cardapio:cardapio
             });
@@ -124,6 +128,9 @@ module.exports = class CardapioController {
             if(!new_cardapio) {
                 return resp.status(404).json({message: "Cardapio não encontrado"});
             }
+            // Limpa o cache
+            delete this.cache.hoje;
+
             return resp.status(200).json({
                 cardapio: new_cardapio
             })
@@ -145,6 +152,9 @@ module.exports = class CardapioController {
             if(!deleted) {
                 return resp.status(404).json({message: "Cardápio não encontrado com id: " + req.params.id_cardapio});
             }
+            // Limpa o cache
+            delete this.cache.hoje;
+
             return resp.status(204).send();
         } catch(e) {
             console.error(e);
@@ -167,6 +177,9 @@ module.exports = class CardapioController {
             if(!cardapio) {
                 return resp.status(404).json({message: "Cardápio não encontrado com id: " + req.params.id_cardapio});
             }
+            // Limpa o cache
+            delete this.cache.hoje;
+            
             return resp.status(200).json({
                 cardapio: cardapio
             });
