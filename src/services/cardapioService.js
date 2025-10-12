@@ -43,15 +43,11 @@ module.exports = class CardapioService {
         return await Cardapio.create(cardapio);
     }
 
-    async updateRefeicoes({add, rm, upd}, id_cardapio) {
-        const cardapio = await this.getCardapioById(id_cardapio);
-        if(!cardapio) return null
-
+    async updateRefeicoes({add, rm, upd}, cardapio) {
         if(add) await this.RefeicaoService.createManyRefeicao(add, cardapio);
         if(upd) await this.RefeicaoService.updateRefeicoes(upd, cardapio);
         if(rm) await this.RefeicaoService.deleteRefeicoes(rm, cardapio);
 
-        return await cardapio.save();
     }
 
     async deleteCardapio(id_cardapio) {
@@ -65,11 +61,13 @@ module.exports = class CardapioService {
         return await Cardapio.deleteOne({_id: id_cardapio});
     }
 
-    async updateCardapio(dia, id_cardapio) {
-        const cardapio = await this.getCardapioById(id_cardapio);
+    async updateCardapio(dia, id_cardapio, body) {
+        let cardapio = await this.getCardapioById(id_cardapio);
         if(!cardapio) return null;
 
+        await this.updateRefeicoes({add: body.add, rm: body.rm, upd: body.upd}, cardapio)
         cardapio.dia = dia;
-        return await cardapio.save();
+        console.log("cardapio atualizado: "+cardapio);
+        return await cardapio.save();;
     }
 }

@@ -21,12 +21,6 @@ module.exports = class CardapioController {
             this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"), 
             this.createCardapio.bind(this)
         );
-        // Atualiza uma lista de refeicoes do cardápio
-        this.router.post(
-            "/:id_cardapio/refeicoes", 
-            this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"), 
-            this.refeicao_ops.bind(this)
-        );
         this.router.delete(
             "/:id_cardapio",
             this.JwtService.validar("ROLE_SER", "ROLE_CANTINA"),
@@ -118,31 +112,6 @@ module.exports = class CardapioController {
         }
     }
 
-    async refeicao_ops(req, resp) {    
-        try{
-            if(!req.params.id_cardapio || (!req.body.add && !req.body.rm && !req.body.upd) ){
-                return resp.status(400).json({message: "Informações requeridas nao informadas"});
-            }
-            
-            const new_cardapio = await this.CardapioService.updateRefeicoes(req.body, req.params.id_cardapio);
-            if(!new_cardapio) {
-                return resp.status(404).json({message: "Cardapio não encontrado"});
-            }
-            // Limpa o cache
-            delete this.cache.hoje;
-
-            return resp.status(200).json({
-                cardapio: new_cardapio
-            })
-        } catch(e) {
-            console.error(e);
-            return resp.status(500).json({
-                message: "Ocorreu um erro ao tentar fazer as operações", 
-                erro: e.message
-            });
-        }
-    }
-
     async deleteCardapio(req, resp) {
         try {
             if(!req.params.id_cardapio) {
@@ -167,12 +136,13 @@ module.exports = class CardapioController {
 
     async updateCardapio(req, resp) {
         try {
-            if(!req.params.id_cardapio || !req.body.data) {
+            if(!req.params.id_cardapio || (!req.body.data && !req.body.add && !req.body.rm && !req.body.upd)) {
                 return resp.status(400).json({message: "Informações requeridas não informadas"});
             }
             const cardapio = await this.CardapioService.updateCardapio(
                 new Date(req.body.data).toISOString().split("T")[0],
-                req.params.id_cardapio
+                req.params.id_cardapio,
+                req.body
             );
             if(!cardapio) {
                 return resp.status(404).json({message: "Cardápio não encontrado com id: " + req.params.id_cardapio});
