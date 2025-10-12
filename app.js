@@ -10,11 +10,13 @@ const bodyParser = require('body-parser');
 const AlunoController = require('./src/controllers/Alunocontroller');
 const ServidorController = require('./src/controllers/ServidorController');
 const CardapioController = require("./src/controllers/cardapioController");
+const UserController = require("./src/controllers/UserController");
 const JwtService = require('./src/infra/auth/JWTService');
 
 const RefeicaoService = require('./src/services/RefeicaoService');
 const AlunoService = require('./src/services/alunoService');
 const CardapioService = require('./src/services/cardapioService');
+const UserService = require('./src/services/UserService');
 const ServidorService = require('./src/services/ServidorService');
 
 const BcriptService = require('./src/infra/auth/BcriptService');
@@ -25,12 +27,14 @@ class App {
         AlunoController,
         ServidorController,
         CardapioController,
+        UserController,
         JwtService
     ) {
         this.app = express();
         this.AlunoController = AlunoController;
         this.ServidorController = ServidorController;
         this.CardapioController = CardapioController;
+        this.UserController = UserController;
         this.JwtService = JwtService;
         this.configurarMiddlewares();
         this.configurarRotas();
@@ -66,7 +70,7 @@ class App {
         this.app.use(cors(corsOptions));
 
         // responde preflight apenas para rotas que realmente existem
-        this.app.options(['/alunos', '/servidores', '/cardapios'], cors(corsOptions));
+        this.app.options(['/alunos', '/servidores', '/cardapios', "/users"], cors(corsOptions));
 
 
         this.app.use(bodyParser.urlencoded({ extended: false }));
@@ -81,7 +85,7 @@ class App {
             this.JwtService.validar("ROLE_USER"), 
             this.CardapioController.router
         );
-
+        this.app.use("/users", this.UserController.router);
         this.app.get("/", (req, resp) => {
             resp.send("test hello world!");
         });
@@ -102,9 +106,11 @@ let appInstance
     const refeicaoService = new RefeicaoService();
     const cardapioService = new CardapioService(refeicaoService);
     const servidorService = new ServidorService(bcriptService);
+    const userService = new UserService(alunoService, servidorService);
 
     const jwtService = new JwtService(alunoService, servidorService, bcriptService);
 
+    const userController = new UserController(userService, jwtService);
     const alunoController = new AlunoController(alunoService, jwtService);
     const servidorController = new ServidorController(servidorService, jwtService);
     const cardapioController = new CardapioController(cardapioService, refeicaoService, jwtService);
@@ -113,6 +119,7 @@ let appInstance
         alunoController,
         servidorController,
         cardapioController,
+        userController,
         jwtService
     );
 

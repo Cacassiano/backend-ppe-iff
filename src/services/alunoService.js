@@ -14,7 +14,9 @@ class AlunoService {
         }
         return aluno;
     }
-
+    async getAllAlunos() {
+        return await Aluno.find({});
+    }
     async save(body) {
         body['senha'] = this.BcriptService.criptografar(body.senha);
         body.roles = ["ROLE_USER", "ROLE_ALUNO"];

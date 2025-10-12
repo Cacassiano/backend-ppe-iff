@@ -25,6 +25,10 @@ class ServidorService {
         return func;
     }
 
+    async getAllServidores() {
+        return await Servidor.find({});
+    }
+
     async getById (id){
         return await Servidor.findOne({_id: id});
     }
