@@ -29,7 +29,11 @@ class JwtService {
         if (!sujeito) {
           return resp.status(403).json({ message: "token invalido" });
         }
+        console.log(sujeito);
+
         // Verifica se as roles do sujeito incluem todas as roles requeridas
+        console.log(sujeito.roles);
+        console.log(roles);
         this.validarRoles(sujeito.roles, roles);
 
         // Adiciona as informações do usuário à requisição
@@ -45,9 +49,7 @@ class JwtService {
   }
 
   validarRoles = (sujeitoRoles, rolesRequeridas) => {
-    const temAcesso = rolesRequeridas.some((role) =>
-      sujeitoRoles.includes(role)
-    );
+    const temAcesso = rolesRequeridas.some((role) =>sujeitoRoles.includes(role));
     if (!temAcesso) throw new Error("acesso não autorizado");
   };
 

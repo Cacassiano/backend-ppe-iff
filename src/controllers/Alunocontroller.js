@@ -12,13 +12,12 @@ class AlunoController {
         this.router.post("/register", this.registrarAluno.bind(this));
         this.router.post("/login", this.loginAluno.bind(this));
 
+        this.router.use("/detalhes", this.JwtService.validar("ROLE_ALUNO"),this.detalhesAluno.bind(this));
         this.router.use("/:matricula", this.JwtService.validar("ROLE_SER"), this.updateAluno.bind(this));
 
         this.router.use("/validate", this.JwtService.validar("ROLE_ALUNO"));
         this.router.get("/validate", this.validarToken.bind(this));
-
-        this.router.use("/detalhes", this.JwtService.validar("ROLE_ALUNO"));
-        this.router.get("/detalhes", this.detalhesAluno.bind(this));
+        
     }
 
     async updateAluno(req, resp) {
@@ -76,6 +75,7 @@ class AlunoController {
                 token: token
             });
         } catch (e) {
+            console.log(e);
             return resp.status(404).json({ message: e.message });
         }
     }

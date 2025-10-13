@@ -46,6 +46,7 @@ class ServidorController {
                 email: func.email
             })
         } catch(e) {
+            console.log(e);
             return resp.status(404).json({message: e.message});
         }
     }
