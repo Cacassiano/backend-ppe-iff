@@ -13,6 +13,14 @@ class ServidorService {
         return await Servidor.create(func);
     }
 
+    async update(email, body) {
+        const func = await Servidor.findOne({email: email});
+        if(!func) return null;
+        delete body.senha;
+        Object.assign(func, body);
+        return await func.save();
+    }
+
     async login(senha, iemail) {
         const tempoDeEspera = Date.now(); 
         const func = await Servidor.findOne({email: iemail});

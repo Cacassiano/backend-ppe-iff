@@ -10,8 +10,28 @@ class ServidorController {
         this.router.post("/login", this.loginServidor.bind(this));
         this.router.post("/register", this.registrarServidor.bind(this));
 
+        this.router.use("/", this.JwtService.validar("ROLE_SER"));
+        this.router.put("/", this.updateServidor.bind(this));
+
         this.router.use("/detalhes", this.JwtService.validar("ROLE_SER"));
         this.router.get("/detalhes", this.detalhesServidor.bind(this));
+    }
+
+    async updateServidor(req, resp) {
+        try {
+            if(!req.body || !req.body.email) {
+                return resp.status(400).json({message: "Email não foi informado"})
+            }
+            const new_servidor = await this.ServidorService.update(req.body.email, req.body);
+            if(!new_servidor) {
+                resp.status(404).json({message: "servidor não encontrado"})
+            }
+
+            resp.status(200).json({servidor: new_servidor})
+
+        }catch(e) {
+            resp.status(500).json({message: e.message})
+        }
     }
 
     async loginServidor(req, resp) {
