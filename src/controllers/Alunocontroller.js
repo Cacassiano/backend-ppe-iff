@@ -40,8 +40,10 @@ class AlunoController {
         if (!req.body.matricula || !req.body.nome || !req.body.sobrenome || !req.body.podeAlmocar || !req.body.senha) {
             return resp.status(400).json({ message: "Informações faltando na requisição" });
         }
+        if(!(req.body.matricula.length == 12) || !(Number.isInteger(req.body.matricula - 0))) {
+            return resp.status(400).json({message: "Matricula Invalida"})
+        }
 
-        const senha = req.body.senha;
         req.body.podeAlmocar = (req.body.podeAlmocar == "sim");
         try {
             const aluno = await this.AlunoService.save(req.body);
@@ -65,8 +67,13 @@ class AlunoController {
     }
 
     async loginAluno(req, resp) {
-        if (!req.body.matricula || !req.body.senha)
+        if (!req.body.matricula || !req.body.senha){
             return resp.status(400).json({ message: "Informações requeridas não foram enviadas" });
+        }
+        
+        if(!(req.body.matricula.length == 12) || !(Number.isInteger(req.body.matricula - 0))) {
+            return resp.status(400).json({message: "Matricula Invalida"})
+        }
         try {
             const aluno = await this.AlunoService.login(req.body.senha, req.body.matricula);
             const token = this.JwtService.criarToken(aluno.matricula, aluno.id, "ROLE_ALUNO");
