@@ -14,6 +14,15 @@ class AlunoService {
         }
         return aluno;
     }
+
+    async update(matricula, body) {
+        const aluno = await Aluno.findOne({matricula: matricula})
+        if(!aluno) return null;
+        delete body.senha;
+        Object.assign(aluno, body)
+        return await aluno.save();
+    }
+
     async getAllAlunos() {
         return await Aluno.find({});
     }

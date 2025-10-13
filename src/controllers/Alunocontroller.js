@@ -12,12 +12,30 @@ class AlunoController {
         this.router.post("/register", this.registrarAluno.bind(this));
         this.router.post("/login", this.loginAluno.bind(this));
 
+        this.router.use("/:matricula", this.JwtService.validar("ROLE_SER"), this.updateAluno.bind(this));
+
         this.router.use("/validate", this.JwtService.validar("ROLE_ALUNO"));
         this.router.get("/validate", this.validarToken.bind(this));
 
         this.router.use("/detalhes", this.JwtService.validar("ROLE_ALUNO"));
         this.router.get("/detalhes", this.detalhesAluno.bind(this));
     }
+
+    async updateAluno(req, resp) {
+        try {
+            if(!req.params.matricula) {
+                return resp.status(400).json({message: "Matricula não foi informada"})
+            }
+            const new_aluno = await this.AlunoService.update(req.params.matricula, req.body);
+            if(!new_aluno){
+                return resp.status(404).json({message: "Aluno não encontrado"})
+            }
+            return resp.status(200).json({aluno: new_aluno})
+        }catch(e) {
+            return resp.status(500).json({message: e.message})
+        }
+    }
+
 
     async registrarAluno(req, resp) {
         if (!req.body.matricula || !req.body.nome || !req.body.sobrenome || !req.body.podeAlmocar || !req.body.senha) {
